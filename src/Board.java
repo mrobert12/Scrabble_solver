@@ -1,3 +1,6 @@
 public class Board {
-    private final int BOARDSIZE = 15;
+    int boardSize;
+    public Board(int boardSize){
+        this.boardSize = boardSize;
+    }
 }
