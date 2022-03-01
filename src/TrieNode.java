@@ -1,6 +1,6 @@
 
 public class TrieNode {
-    private Boolean endOfWord;
+    private Boolean endOfWord = false;
     TrieNode[] children = new TrieNode[26];
     public void setEndOfWord(){
         endOfWord = true;

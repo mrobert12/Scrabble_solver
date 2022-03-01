@@ -1,5 +1,4 @@
 
-
 public class Trie {
     TrieNode root = new TrieNode();
 
@@ -16,6 +15,7 @@ public class Trie {
         }
         node.setEndOfWord();
     }
+
     public Boolean search(String word){
         TrieNode node = root;
         char ch;
@@ -29,9 +29,6 @@ public class Trie {
                 node = node.getChild(index);
             }
         }
-        if(node.isEndOfWord()){
-            return true;
-        }
-        return false;
+        return node.isEndOfWord();
     }
 }
