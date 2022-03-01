@@ -16,4 +16,22 @@ public class Trie {
         }
         node.setEndOfWord();
     }
+    public Boolean search(String word){
+        TrieNode node = root;
+        char ch;
+        for(int i = 0; i < word.length();i++){
+            ch = word.charAt(i);
+            int index = ch - 'a';
+            if(node.getChildren(index) == null){
+                return false;
+            }
+            else{
+                node = node.getChild(index);
+            }
+        }
+        if(node.isEndOfWord()){
+            return true;
+        }
+        return false;
+    }
 }
