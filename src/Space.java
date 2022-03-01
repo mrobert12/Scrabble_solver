@@ -1,10 +1,10 @@
 public class Space {
     private boolean anchorPoint;
     Tile tile;
-    private int tileMult;
-    private int wordMult;
-    private int xCoordinate;
-    private int yCoordinate;
+    private final int tileMult;
+    private final int wordMult;
+    private final int xCoordinate;
+    private final int yCoordinate;
     public Space(int tileMult,int wordMult,int xCoordinate,int yCoordinate){
         this.tile = null;
         this.tileMult = tileMult;
@@ -25,5 +25,21 @@ public class Space {
     }
     public Tile getTile(){
         return tile;
+    }
+
+    public int getTileMult() {
+        return tileMult;
+    }
+
+    public int getWordMult() {
+        return wordMult;
+    }
+
+    public int getxCoordinate() {
+        return xCoordinate;
+    }
+
+    public int getyCoordinate() {
+        return yCoordinate;
     }
 }
