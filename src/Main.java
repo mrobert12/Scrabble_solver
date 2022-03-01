@@ -16,7 +16,8 @@ public class Main {
             System.exit(1);
         }
         while(fileRead.hasNextLine()){
-
+            String word = fileRead.nextLine();
+            trie.insert(word);
         }
     }
 }
