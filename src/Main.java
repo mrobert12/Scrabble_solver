@@ -19,5 +19,6 @@ public class Main {
             String word = fileRead.nextLine();
             trie.insert(word);
         }
+
     }
 }

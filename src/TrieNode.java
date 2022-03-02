@@ -1,7 +1,9 @@
+import java.util.HashMap;
 
 public class TrieNode {
     private Boolean endOfWord = false;
-    TrieNode[] children = new TrieNode[26];
+    HashMap<Character,TrieNode> children = new HashMap<>();
+
     public void setEndOfWord(){
         endOfWord = true;
     }
@@ -10,14 +12,12 @@ public class TrieNode {
         return endOfWord;
     }
 
-    public void addChildren(int index){
-        children[index] = new TrieNode();
+    public void addChildren(HashMap<Character,TrieNode> children){
+        this.children = children;
     }
 
-    public TrieNode[] getChildren(int index){
+    public HashMap<Character,TrieNode> getChildren(){
         return children;
     }
-    public TrieNode getChild(int index){
-        return children[index];
-    }
+
 }

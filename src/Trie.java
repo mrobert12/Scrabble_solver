@@ -1,32 +1,38 @@
+import java.util.HashMap;
 
 public class Trie {
     TrieNode root = new TrieNode();
 
     public void insert(String word){
+        HashMap<Character,TrieNode> children = root.getChildren();
         TrieNode node = root;
         char ch;
         for(int i = 0; i < word.length();i++){
             ch = word.charAt(i);
-            int index = ch - 'a';
-            if(node.getChild(index) == null){
-                node.addChildren(index);
+            if(children.containsKey(ch)){
+                node = children.get(ch);
             }
-            node = node.getChild(index);
+            else{
+                node = new TrieNode();
+                children.put(ch,node);
+            }
+            children = node.getChildren();
         }
         node.setEndOfWord();
     }
 
     public Boolean search(String word){
+        HashMap<Character,TrieNode> children = root.getChildren();
         TrieNode node = root;
         char ch;
         for(int i = 0; i < word.length();i++){
             ch = word.charAt(i);
-            int index = ch - 'a';
-            if(node.getChildren(index) == null){
-                return false;
+            if(children.containsKey(ch)){
+                node = children.get(ch);
+                children = node.getChildren();
             }
             else{
-                node = node.getChild(index);
+                return false;
             }
         }
         return node.isEndOfWord();
