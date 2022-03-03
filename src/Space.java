@@ -5,8 +5,9 @@ public class Space {
     private final int wordMult;
     private final int xCoordinate;
     private final int yCoordinate;
-    public Space(int tileMult,int wordMult,int xCoordinate,int yCoordinate){
-        this.tile = null;
+    public Space(int tileMult,int wordMult,int xCoordinate,int yCoordinate
+            ,Tile tile){
+        this.tile = tile;
         this.tileMult = tileMult;
         this.wordMult = wordMult;
         this.xCoordinate = xCoordinate;
