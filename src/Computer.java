@@ -20,10 +20,12 @@ public class Computer {
             LeftPart(anchor);
         }
     }
+
     public void LeftPart(Space anchor){
         int x = anchor.getxCoordinate();
         int y = anchor.getyCoordinate();
-        if(board.getSpace(x,y).getTile() == null){
+        Tile middle = anchor.getTile();
+        if(board.getSpace(x - 1,y - 1).getTile() == null){
 
         }
     }

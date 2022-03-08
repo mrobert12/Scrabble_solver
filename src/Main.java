@@ -31,7 +31,6 @@ public class Main {
     }
 
     public static Board readBoard(int[] values,Computer player){
-
         Scanner input = new Scanner(System.in);
         int boardSize = Integer.parseInt(input.nextLine());
         Board board = new Board(boardSize);
