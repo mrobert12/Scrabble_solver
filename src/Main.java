@@ -6,11 +6,13 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\Dictionary");
+        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\animals");
         int[] values = new int[26];
+        Computer player = new Computer();
         setValues(values);
         readDictionary(dictionary,trie);
-        //Board board = readBoard(values);
+        Board board = readBoard(values,player);
+
     }
 
     public static void readDictionary(File dictionary,Trie trie){
@@ -27,14 +29,15 @@ public class Main {
             trie.insert(word);
         }
     }
-    public static Board readBoard(int[] values){
+    public static Board readBoard(int[] values,Computer player){
+
         Scanner input = new Scanner(System.in);
-        int boardSize = input.nextInt();
+        int boardSize = Integer.parseInt(input.nextLine());
         Board board = new Board(boardSize);
         ArrayList<Space> anchors = new ArrayList<>();
         for(int i = 0;i < boardSize;i++){
             String line = input.nextLine();
-            String[] spaces = line.split(" ");
+            String[] spaces = line.trim().split("\\s+");
             for(int j = 0;j < spaces.length;j++){
                 char first = spaces[j].charAt(0);
                 char second = ' ';
@@ -46,14 +49,15 @@ public class Main {
                      space = new Space(1,1,j,i,null);
                     board.addSpace(space,j,i);
                 }
+                else if(first == '.'){
+                    space = new Space(1,second - '0',j,i
+                            ,null);
+                    board.addSpace(space,j,i);
+                }
                 else if(first - '0' >= 0 && first - '0' <= 9){
                     space = new Space (first - '0',1,j,i
                             ,null);
                     board.addSpace(space,j,i);
-                }
-                else if(first == '.' && second != '.'){
-                    space = new Space(1,second - '0',j,i
-                            ,null);
                 }
                 else if(first >= 'a' && first <= 'z'){
                     Tile tile = new Tile(first,values[first - 'a']);
@@ -70,10 +74,22 @@ public class Main {
                 }
             }
         }
-
+        String hand = input.nextLine();
+        Tile tile;
+        for(int x = 0;x < hand.length();x++){
+            char letter = hand.charAt(x);
+            if(letter == '*'){
+                tile = new Tile(letter,0);
+            }
+            else{
+                tile = new Tile(letter, values[letter - 'a']);
+            }
+            player.addTile(tile);
+        }
+        board.firstAnchors(anchors);
         return board;
     }
-    public static int[] setValues(int[] values){
+    public static void setValues(int[] values){
         File tileValues = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\Scrabble tiles");
         Scanner scan = null;
         try {
@@ -85,15 +101,13 @@ public class Main {
         }
         while(scan.hasNextLine()) {
             String line = scan.nextLine();
-            String[] lines = line.split(" ");
+            String[] lines = line.split("\\s+");
             char letter = lines[0].charAt(0);
             if(letter == '*'){
                 continue;
             }
-            int score = Integer.valueOf(lines[1]);
-            int numTiles = Integer.valueOf(lines[2]);
+            int score = Integer.parseInt(lines[1]);
             values[letter - 'a'] = score;
         }
-        return values;
     }
 }
