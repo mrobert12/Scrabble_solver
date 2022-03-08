@@ -1,6 +1,3 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 
 public class Tile {
     private final char letter;

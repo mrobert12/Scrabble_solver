@@ -12,7 +12,7 @@ public class Main {
         setValues(values);
         readDictionary(dictionary,trie);
         Board board = readBoard(values,player);
-
+        player.Solver(board,trie,values);
     }
 
     public static void readDictionary(File dictionary,Trie trie){
@@ -29,6 +29,7 @@ public class Main {
             trie.insert(word);
         }
     }
+
     public static Board readBoard(int[] values,Computer player){
 
         Scanner input = new Scanner(System.in);
@@ -89,6 +90,7 @@ public class Main {
         board.firstAnchors(anchors);
         return board;
     }
+
     public static void setValues(int[] values){
         File tileValues = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\Scrabble tiles");
         Scanner scan = null;

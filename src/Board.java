@@ -25,4 +25,7 @@ public class Board {
     public ArrayList<Space> getAnchors(){
         return anchors;
     }
+    public Space getSpace(int x,int y){
+        return spaces[x][y];
+    }
 }
