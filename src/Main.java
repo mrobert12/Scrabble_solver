@@ -6,9 +6,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File(args[0]);
+        File dictionary = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\Dictionary");
+        int[] values = new int[26];
+        setValues(values);
         readDictionary(dictionary,trie);
-        Board board = readBoard();
+        //Board board = readBoard(values);
     }
 
     public static void readDictionary(File dictionary,Trie trie){
@@ -25,7 +27,7 @@ public class Main {
             trie.insert(word);
         }
     }
-    public static Board readBoard(){
+    public static Board readBoard(int[] values){
         Scanner input = new Scanner(System.in);
         int boardSize = input.nextInt();
         Board board = new Board(boardSize);
@@ -50,14 +52,14 @@ public class Main {
                     board.addSpace(space,j,i);
                 }
                 else if(first >= 'a' && first <= 'z'){
-                    Tile tile = new Tile(first,false);
+                    Tile tile = new Tile(first,values[first - 'a']);
                     space = new Space(1,1,j,i,tile);
                     board.addSpace(space,j,i);
                     anchors.add(space);
                 }
                 else if(first >= 'A' && first <= 'Z'){
                     Tile tile = new Tile(Character.toLowerCase(first)
-                            ,true);
+                            ,0);
                     space = new Space(1,1,j,i,tile);
                     board.addSpace(space,j,i);
                     anchors.add(space);
@@ -66,5 +68,23 @@ public class Main {
         }
 
         return board;
+    }
+    public static int[] setValues(int[] values){
+        File tileValues = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\TileValues");
+        Scanner scan = null;
+        int i = 0;
+        try {
+            scan = new Scanner(tileValues);
+        }
+        catch(FileNotFoundException e){
+            System.out.println("File Read Error");
+            System.exit(1);
+        }
+        while(scan.hasNextLine()){
+            int value = scan.nextInt();
+            values[i] = value;
+            i++;
+        }
+        return values;
     }
 }

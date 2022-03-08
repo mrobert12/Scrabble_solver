@@ -5,13 +5,9 @@ import java.util.Scanner;
 public class Tile {
     private final char letter;
     private final int value;
-    private final int[] values = new int[26];
-    public Tile(char letter,Boolean blank){
+    public Tile(char letter,int value){
         this.letter = letter;
-        if(!blank) {
-            this.value = values[letter - 'a'];
-        }
-        else this.value = 0;
+        this.value = value;
     }
 
     public char getLetter() {
@@ -20,18 +16,5 @@ public class Tile {
     public int getValue() {
         return value;
     }
-    public void setValues(){
-        File tileValues = new File("TileValues");
-        Scanner scan = null;
-        try {
-            scan = new Scanner(tileValues);
-        }
-        catch(FileNotFoundException e){
-            System.out.println("File Read Error");
-            System.exit(1);
-        }
-        while(scan.hasNextLine()){
 
-        }
-    }
 }

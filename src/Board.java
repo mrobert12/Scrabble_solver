@@ -1,12 +1,12 @@
 public class Board {
     int boardSize;
-    Tile[][] tiles;
+    Space[][] spaces;
     public Board(int boardSize){
         this.boardSize = boardSize;
-        tiles = new Tile[boardSize][boardSize];
+        spaces = new Space[boardSize][boardSize];
         for(int i = 0; i < boardSize;i++){
             for(int j = 0; j < boardSize;j++){
-                tiles[i][j] = null;
+                spaces[i][j] = null;
             }
         }
     }
