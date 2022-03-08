@@ -37,12 +37,12 @@ public class Main {
             String[] spaces = line.split(" ");
             for(int j = 0;j < spaces.length;j++){
                 char first = spaces[j].charAt(0);
-                char second;
+                char second = ' ';
                 if(spaces[j].length() > 1){
                     second = spaces[j].charAt(1);
                 }
                 Space space;
-                if(first =='.'){
+                if(first =='.' && second == '.'){
                      space = new Space(1,1,j,i,null);
                     board.addSpace(space,j,i);
                 }
@@ -50,6 +50,10 @@ public class Main {
                     space = new Space (first - '0',1,j,i
                             ,null);
                     board.addSpace(space,j,i);
+                }
+                else if(first == '.' && second != '.'){
+                    space = new Space(1,second - '0',j,i
+                            ,null);
                 }
                 else if(first >= 'a' && first <= 'z'){
                     Tile tile = new Tile(first,values[first - 'a']);
@@ -70,9 +74,8 @@ public class Main {
         return board;
     }
     public static int[] setValues(int[] values){
-        File tileValues = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\TileValues");
+        File tileValues = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\Scrabble tiles");
         Scanner scan = null;
-        int i = 0;
         try {
             scan = new Scanner(tileValues);
         }
@@ -80,10 +83,16 @@ public class Main {
             System.out.println("File Read Error");
             System.exit(1);
         }
-        while(scan.hasNextLine()){
-            int value = scan.nextInt();
-            values[i] = value;
-            i++;
+        while(scan.hasNextLine()) {
+            String line = scan.nextLine();
+            String[] lines = line.split(" ");
+            char letter = lines[0].charAt(0);
+            if(letter == '*'){
+                continue;
+            }
+            int score = Integer.valueOf(lines[1]);
+            int numTiles = Integer.valueOf(lines[2]);
+            values[letter - 'a'] = score;
         }
         return values;
     }
