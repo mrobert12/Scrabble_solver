@@ -12,6 +12,8 @@ public class Main {
         setValues(values);
         readDictionary(dictionary,trie);
         Board board = readBoard(values,player);
+        board.setAnchors();
+        board.printAnchors();
         player.Solver(board,trie,values);
     }
 
@@ -34,7 +36,6 @@ public class Main {
         Scanner input = new Scanner(System.in);
         int boardSize = Integer.parseInt(input.nextLine());
         Board board = new Board(boardSize);
-        ArrayList<Space> anchors = new ArrayList<>();
         for(int i = 0;i < boardSize;i++){
             String line = input.nextLine();
             String[] spaces = line.trim().split("\\s+");
@@ -63,14 +64,12 @@ public class Main {
                     Tile tile = new Tile(first,values[first - 'a']);
                     space = new Space(1,1,j,i,tile);
                     board.addSpace(space,j,i);
-                    anchors.add(space);
                 }
                 else if(first >= 'A' && first <= 'Z'){
                     Tile tile = new Tile(Character.toLowerCase(first)
                             ,0);
                     space = new Space(1,1,j,i,tile);
                     board.addSpace(space,j,i);
-                    anchors.add(space);
                 }
             }
         }
@@ -86,7 +85,6 @@ public class Main {
             }
             player.addTile(tile);
         }
-        board.firstAnchors(anchors);
         return board;
     }
 

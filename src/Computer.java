@@ -14,19 +14,20 @@ public class Computer {
         this.board = board;
         this.trie = trie;
         this.values = values;
+        TrieNode root = trie.getRoot();
         ArrayList<Space> anchors = board.getAnchors();
         for(int i = 0;i< anchors.size();i++){
             Space anchor = anchors.get(i);
-            LeftPart(anchor);
+            LeftPart(anchor,root,anchor.getxCoordinate()
+                    ,anchor.getyCoordinate());
         }
     }
 
-    public void LeftPart(Space anchor){
-        int x = anchor.getxCoordinate();
-        int y = anchor.getyCoordinate();
-        Tile middle = anchor.getTile();
-        if(board.getSpace(x - 1,y - 1).getTile() == null){
+    public void LeftPart(Space anchor,TrieNode node,int x ,int y){
 
-        }
+        Tile middle = anchor.getTile();
+
+
+
     }
 }

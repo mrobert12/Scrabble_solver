@@ -37,4 +37,8 @@ public class Trie {
         }
         return node.isEndOfWord();
     }
+
+    public TrieNode getRoot(){
+        return root;
+    }
 }
