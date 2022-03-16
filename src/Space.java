@@ -1,5 +1,4 @@
 public class Space {
-    private boolean anchorPoint;
     Tile tile;
     private final int tileMult;
     private final int wordMult;
@@ -12,14 +11,6 @@ public class Space {
         this.wordMult = wordMult;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-    }
-
-    public void setAnchorPoint(boolean anchorPoint) {
-        this.anchorPoint = anchorPoint;
-    }
-
-    public Boolean getAnchorPoint(){
-        return anchorPoint;
     }
     public void setTile(Tile tile){
         this.tile = tile;

@@ -1,19 +1,19 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\animals");
+        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\twl06");
         int[] values = new int[26];
         Computer player = new Computer();
         setValues(values);
         readDictionary(dictionary,trie);
         Board board = readBoard(values,player);
         board.setAnchors();
-        board.printAnchors();
+        player.handToCharArray();
+        player.allWords("",trie.getRoot());
         player.Solver(board,trie,values);
     }
 

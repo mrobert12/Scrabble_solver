@@ -60,4 +60,7 @@ public class Board {
     public Space getSpace(int x,int y){
         return spaces[x][y];
     }
+    public int getSize(){
+        return boardSize;
+    }
 }
