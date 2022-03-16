@@ -17,22 +17,22 @@ public class Board {
         for(int i = 0;i < boardSize;i++){
             for(int j = 0; j < boardSize;j++){
                 if(spaces[i][j].getTile() != null){
-                    if(i != 0 && spaces[i - 1][j].getTile() == null){
+                    if(i > 0 && spaces[i - 1][j].getTile() == null){
                         if(!anchors.contains(spaces[i - 1][j])) {
                             anchors.add(spaces[i - 1][j]);
                         }
                     }
-                    if(i != 6 && spaces[i + 1][j].getTile() == null){
+                    if(i < 6 && spaces[i + 1][j].getTile() == null){
                         if(!anchors.contains(spaces[i + 1][j])) {
                             anchors.add(spaces[i + 1][j]);
                         }
                     }
-                    if(j != 0 && spaces[i][j - 1].getTile() == null){
+                    if(j > 0 && spaces[i][j - 1].getTile() == null){
                         if(!anchors.contains(spaces[i][j - 1])) {
                             anchors.add(spaces[i][j - 1]);
                         }
                     }
-                    if(j != 6 && spaces[i][j + 1].getTile() == null){
+                    if(j < 6 && spaces[i][j + 1].getTile() == null){
                         if(!anchors.contains(spaces[i][j + 1])) {
                             anchors.add(spaces[i][j + 1]);
                         }
@@ -46,7 +46,9 @@ public class Board {
             System.out.println(anchors.get(i).getxCoordinate() + " " + anchors.get(i).getyCoordinate());
         }
     }
-
+    public Boolean emptySpace(int x, int y){
+        return spaces[x][y].getTile() == null;
+    }
     public void addSpace(Space space,int x,int y){
         spaces[x][y] = space;
     }
@@ -62,5 +64,29 @@ public class Board {
     }
     public int getSize(){
         return boardSize;
+    }
+
+    public void printBoard(){
+        for(int i = 0; i < boardSize;i++){
+            for(int j = 0; j< boardSize;j++){
+                Space space = spaces[i][j];
+                if(j > 0){
+                    System.out.print(" ");
+                }
+                if(space.getTile() != null){
+                    System.out.print(" " + space.getTile().getLetter());
+                }
+                else if(space.getTileMult() == 1 && space.getWordMult() == 1){
+                    System.out.print("..");
+                }
+                else if(space.getTileMult() != 1){
+                    System.out.print("." + space.getTileMult());
+                }
+                else if(space.getWordMult() != 1){
+                    System.out.print(space.getWordMult() + ".");
+                }
+            }
+            System.out.println();
+        }
     }
 }

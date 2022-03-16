@@ -5,12 +5,13 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\twl06");
+        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\sowpods");
         int[] values = new int[26];
         Computer player = new Computer();
         setValues(values);
         readDictionary(dictionary,trie);
         Board board = readBoard(values,player);
+        board.printBoard();
         board.setAnchors();
         player.handToCharArray();
         player.allWords("",trie.getRoot());
@@ -47,29 +48,29 @@ public class Main {
                 }
                 Space space;
                 if(first =='.' && second == '.'){
-                     space = new Space(1,1,j,i,null);
-                    board.addSpace(space,j,i);
+                     space = new Space(1,1,i,j,null);
+                    board.addSpace(space,i,j);
                 }
                 else if(first == '.'){
-                    space = new Space(1,second - '0',j,i
+                    space = new Space(1,second - '0',i,j
                             ,null);
-                    board.addSpace(space,j,i);
+                    board.addSpace(space,i,j);
                 }
                 else if(first - '0' >= 0 && first - '0' <= 9){
-                    space = new Space (first - '0',1,j,i
+                    space = new Space (first - '0',1,i,j
                             ,null);
-                    board.addSpace(space,j,i);
+                    board.addSpace(space,i,j);
                 }
                 else if(first >= 'a' && first <= 'z'){
                     Tile tile = new Tile(first,values[first - 'a']);
-                    space = new Space(1,1,j,i,tile);
-                    board.addSpace(space,j,i);
+                    space = new Space(1,1,i,j,tile);
+                    board.addSpace(space,i,j);
                 }
                 else if(first >= 'A' && first <= 'Z'){
                     Tile tile = new Tile(Character.toLowerCase(first)
                             ,0);
-                    space = new Space(1,1,j,i,tile);
-                    board.addSpace(space,j,i);
+                    space = new Space(1,1,i,j,tile);
+                    board.addSpace(space,i,j);
                 }
             }
         }
