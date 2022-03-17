@@ -2,15 +2,15 @@ public class Space {
     Tile tile;
     private final int tileMult;
     private final int wordMult;
-    private final int xCoordinate;
-    private final int yCoordinate;
-    public Space(int tileMult,int wordMult,int xCoordinate,int yCoordinate
+    private final int row;
+    private final int col;
+    public Space(int tileMult,int wordMult,int row,int col
             ,Tile tile){
         this.tile = tile;
         this.tileMult = tileMult;
         this.wordMult = wordMult;
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
+        this.row = row;
+        this.col = col;
     }
     public void setTile(Tile tile){
         this.tile = tile;
@@ -27,11 +27,11 @@ public class Space {
         return wordMult;
     }
 
-    public int getxCoordinate() {
-        return xCoordinate;
+    public int getRow() {
+        return row;
     }
 
-    public int getyCoordinate() {
-        return yCoordinate;
+    public int getCol() {
+        return col;
     }
 }

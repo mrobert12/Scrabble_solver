@@ -37,6 +37,19 @@ public class Trie {
         }
         return node.isEndOfWord();
     }
+    public TrieNode getNode(String prefix){
+        HashMap<Character,TrieNode> children = root.getChildren();
+        TrieNode node = root;
+        char ch;
+        for(int i = 0; i < prefix.length();i++){
+            ch = prefix.charAt(i);
+            if(children.containsKey(ch)){
+                node = children.get(ch);
+                children = node.getChildren();
+            }
+        }
+        return node;
+    }
 
     public TrieNode getRoot(){
         return root;

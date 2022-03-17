@@ -17,24 +17,24 @@ public class Board {
         for(int i = 0;i < boardSize;i++){
             for(int j = 0; j < boardSize;j++){
                 if(spaces[i][j].getTile() != null){
-                    if(i > 0 && spaces[i - 1][j].getTile() == null){
-                        if(!anchors.contains(spaces[i - 1][j])) {
-                            anchors.add(spaces[i - 1][j]);
+                    if(i > 0 && getUp(i,j).getTile() == null){
+                        if(!anchors.contains(getUp(i,j))){
+                            anchors.add(getUp(i,j));
                         }
                     }
-                    if(i < 6 && spaces[i + 1][j].getTile() == null){
-                        if(!anchors.contains(spaces[i + 1][j])) {
-                            anchors.add(spaces[i + 1][j]);
+                    if(i < 6 && getDown(i,j).getTile() == null){
+                        if(!anchors.contains(getDown(i,j))) {
+                            anchors.add(getDown(i,j));
                         }
                     }
-                    if(j > 0 && spaces[i][j - 1].getTile() == null){
-                        if(!anchors.contains(spaces[i][j - 1])) {
-                            anchors.add(spaces[i][j - 1]);
+                    if(j > 0 && getLeft(i,j).getTile() == null){
+                        if(!anchors.contains(getLeft(i,j))) {
+                            anchors.add(getLeft(i,j));
                         }
                     }
-                    if(j < 6 && spaces[i][j + 1].getTile() == null){
-                        if(!anchors.contains(spaces[i][j + 1])) {
-                            anchors.add(spaces[i][j + 1]);
+                    if(j < 6 && getRight(i,j).getTile() == null){
+                        if(!anchors.contains(getRight(i,j))) {
+                            anchors.add(getRight(i,j));
                         }
                     }
                 }
@@ -42,15 +42,15 @@ public class Board {
         }
     }
     public void printAnchors(){
-        for(int i = 0; i < anchors.size();i++){
-            System.out.println(anchors.get(i).getxCoordinate() + " " + anchors.get(i).getyCoordinate());
+        for (Space anchor : anchors) {
+            System.out.println(anchor.getRow() + " " + anchor.getCol());
         }
     }
-    public Boolean emptySpace(int x, int y){
-        return spaces[x][y].getTile() == null;
+    public Boolean emptySpace(Space space){
+        return space.getTile() == null;
     }
-    public void addSpace(Space space,int x,int y){
-        spaces[x][y] = space;
+    public void addSpace(Space space,int row,int col){
+        spaces[row][col] = space;
     }
 
     public void addAnchor(Space space){
@@ -59,8 +59,8 @@ public class Board {
     public ArrayList<Space> getAnchors(){
         return anchors;
     }
-    public Space getSpace(int x,int y){
-        return spaces[x][y];
+    public Space getSpace(int row,int col){
+        return spaces[row][col];
     }
     public int getSize(){
         return boardSize;
@@ -89,4 +89,19 @@ public class Board {
             System.out.println();
         }
     }
+
+    public Space getLeft(int row, int col){
+        return spaces[row][col - 1];
+    }
+    public Space getRight(int row, int col){
+        return spaces[row][col + 1];
+    }
+    public Space getUp(int row, int col){
+        return spaces[row - 1][col];
+    }
+    public Space getDown(int row, int col){
+        return spaces[row + 1][col];
+    }
+
+
 }
