@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Board {
+public class Board{
     int boardSize;
     Space[][] spaces;
     ArrayList<Space> anchors = new ArrayList<>();
@@ -13,6 +13,7 @@ public class Board {
             }
         }
     }
+
     public void setAnchors(){
         for(int i = 0;i < boardSize;i++){
             for(int j = 0; j < boardSize;j++){
@@ -66,6 +67,11 @@ public class Board {
         return boardSize;
     }
 
+    public void playTile(int row,int col,Tile tile){
+        Space space = this.spaces[row][col];
+        space.setTile(tile);
+    }
+
     public void printBoard(){
         for(int i = 0; i < boardSize;i++){
             for(int j = 0; j< boardSize;j++){
@@ -102,6 +108,5 @@ public class Board {
     public Space getDown(int row, int col){
         return spaces[row + 1][col];
     }
-
 
 }

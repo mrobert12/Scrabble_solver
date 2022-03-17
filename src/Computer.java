@@ -18,28 +18,57 @@ public class Computer {
         this.values = values;
         TrieNode root = trie.getRoot();
         ArrayList<Space> anchors = board.getAnchors();
-        for(int i = 0; i < anchors.size();i++){
-            StringBuilder partialWord = new StringBuilder("");
-            int row = anchors.get(i).getRow();
-            int col = anchors.get(i).getCol();
-            String prefix = leftPrefix(partialWord,row,col);
+        System.out.println(charHand);
+        for (Space anchor : anchors) {
+            StringBuilder partialWord = new StringBuilder();
+            int row = anchor.getRow();
+            int col = anchor.getCol();
+            String prefix = leftPrefix(partialWord, row, col);
+            int prefixLength = prefix.length();
             TrieNode node = trie.getNode(prefix);
-            allWords(prefix,node);
+            allWords(prefix, node, row, col, prefixLength);
         }
     }
 
-    public void allWords(String partialWord, TrieNode node){
+    public void playOnBoard(String word,int row, int col,int prefixLength){
+        Board temp = Main.boardFromFile(values,this);
+        char ch;
+        for(int i = 0; i < word.length();i++){
+
+            if(i < prefixLength){
+                continue;
+            }
+            ch = word.charAt(i);
+            int index = 0;
+            for(int j = 0;j < hand.size();j++){
+                if(hand.get(j).getLetter() == ch){
+                    index = j;
+                }
+            }
+            temp.playTile(row,col,hand.get(index));
+            col++;
+        }
+        temp.printBoard();
+    }
+
+
+
+    public void allWords(String partialWord, TrieNode node,int row,int col
+            ,int prefixLength){
         HashMap<Character,TrieNode> children = node.getChildren();
         if(node.isEndOfWord()){
             System.out.println(partialWord);
+            playOnBoard(partialWord,row,col,prefixLength);
         }
         children.forEach((key,value) ->{
             if(charHand.contains(key)){
                 charHand.remove(key);
-                allWords(partialWord + key,children.get(key));
+                allWords(partialWord + key,children.get(key),row,col
+                        ,prefixLength);
                 charHand.add(key);
             }
         });
+
     }
 
     public String leftPrefix(StringBuilder partialWord,int row ,int col){
@@ -58,4 +87,10 @@ public class Computer {
             charHand.add(tile.getLetter());
         }
     }
+    public void printHand(){
+        for (Tile tile : hand) {
+            System.out.print(tile.getLetter());
+        }
+    }
+
 }
