@@ -7,7 +7,9 @@ public class Computer {
     Board board;
     Trie trie;
     int [] values;
-
+    int highScore;
+    Board highBoard;
+    String highWord;
     public void addTile(Tile tile){
         hand.add(tile);
     }
@@ -28,16 +30,19 @@ public class Computer {
             TrieNode node = trie.getNode(prefix);
             allWords(prefix, node, row, col, prefixLength);
         }
+        System.out.println("Solution " + highWord + " has " + highScore + " points");
+        highBoard.printBoard();
     }
 
     public void playOnBoard(String word,int row, int col,int prefixLength){
         Board temp = new Board(board.boardSize);
-        temp.copySpaces(board.spaces);
-
+        temp.copyBoard(board.spaces);
+        int score = 0;
         char ch;
         for(int i = 0; i < word.length();i++){
-
             if(i < prefixLength){
+                ch = word.charAt(i);
+                score += score(row,col,ch,false);
                 continue;
             }
             ch = word.charAt(i);
@@ -47,17 +52,29 @@ public class Computer {
                     index = j;
                 }
             }
-            temp.playTile(row,col,hand.get(index));
+            score += score(row,col,ch,true);
+            if(temp.emptySpace(temp.getSpace(row,col))) {
+                temp.playTile(row, col, hand.get(index));
+            }
+            else {
+                return;
+            }
             col++;
         }
-        temp.printBoard();
+        if(score > highScore){
+            highScore = score;
+            highBoard = temp;
+            highWord = word;
+        }
     }
-
-
 
     public void allWords(String partialWord, TrieNode node,int row,int col
             ,int prefixLength){
         HashMap<Character,TrieNode> children = node.getChildren();
+        int wordLength = board.boardSize - col;
+        if(partialWord.length() > wordLength){
+            return;
+        }
         if(node.isEndOfWord()){
             System.out.println(partialWord);
             playOnBoard(partialWord,row,col,prefixLength);
@@ -94,5 +111,17 @@ public class Computer {
             System.out.print(tile.getLetter());
         }
     }
-
+    public int score(int row,int col,char ch,Boolean spaceBonus){
+        int score;
+        Space space = board.getSpace(row,col);
+        int tMult = space.getTileMult();
+        int wMult = space.getWordMult();
+        if(spaceBonus) {
+            score = values[ch - 'a'] * tMult * wMult;
+        }
+        else{
+            score = values[ch -'a'];
+        }
+        return score;
+    }
 }
