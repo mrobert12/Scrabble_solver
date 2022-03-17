@@ -31,7 +31,9 @@ public class Computer {
     }
 
     public void playOnBoard(String word,int row, int col,int prefixLength){
-        Board temp = Main.boardFromFile(values,this);
+        Board temp = new Board(board.boardSize);
+        temp.copySpaces(board.spaces);
+
         char ch;
         for(int i = 0; i < word.length();i++){
 

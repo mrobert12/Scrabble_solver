@@ -108,5 +108,15 @@ public class Board{
     public Space getDown(int row, int col){
         return spaces[row + 1][col];
     }
-
+    public void copySpaces(Space[][] sp){
+        for(int i = 0;i< boardSize;i++){
+            for(int j = 0;j< boardSize;j++){
+                int tmult = sp[i][j].getTileMult();
+                int wmult = sp[i][j].getWordMult();
+                Tile tile = sp[i][j].getTile();
+                Space space = new Space(tmult,wmult,i,j,tile);
+                this.addSpace(space,i,j);
+            }
+        }
+    }
 }
