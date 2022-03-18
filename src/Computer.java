@@ -26,9 +26,10 @@ public class Computer {
             int row = anchor.getRow();
             int col = anchor.getCol();
             String prefix = leftPrefix(partialWord, row, col);
+            System.out.println(prefix);
             int prefixLength = prefix.length();
             TrieNode node = trie.getNode(prefix);
-            allWords(prefix, node, row, col, prefixLength);
+            extendRight(prefix, node, row, col, prefixLength);
         }
         System.out.println("Solution " + highWord + " has " + highScore + " points");
         highBoard.printBoard();
@@ -68,21 +69,20 @@ public class Computer {
         }
     }
 
-    public void allWords(String partialWord, TrieNode node,int row,int col
+    public void extendRight(String partialWord, TrieNode node,int row,int col
             ,int prefixLength){
         HashMap<Character,TrieNode> children = node.getChildren();
         int wordLength = board.boardSize - col;
-        if(partialWord.length() > wordLength){
+        if(partialWord.length() - prefixLength > wordLength){
             return;
         }
         if(node.isEndOfWord()){
-            System.out.println(partialWord);
             playOnBoard(partialWord,row,col,prefixLength);
         }
         children.forEach((key,value) ->{
             if(charHand.contains(key)){
                 charHand.remove(key);
-                allWords(partialWord + key,children.get(key),row,col
+                extendRight(partialWord + key,children.get(key),row,col
                         ,prefixLength);
                 charHand.add(key);
             }
