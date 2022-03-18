@@ -119,4 +119,7 @@ public class Board{
             }
         }
     }
+    public Boolean inBounds(int row, int col){
+        return row < boardSize && col < boardSize;
+    }
 }

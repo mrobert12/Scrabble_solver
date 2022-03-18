@@ -26,10 +26,9 @@ public class Computer {
             int row = anchor.getRow();
             int col = anchor.getCol();
             String prefix = leftPrefix(partialWord, row, col);
-            System.out.println(prefix);
             int prefixLength = prefix.length();
             TrieNode node = trie.getNode(prefix);
-            extendRight(prefix, node, row, col, prefixLength);
+            extendRight(prefix, node, row, col, prefixLength,col);
         }
         System.out.println("Solution " + highWord + " has " + highScore + " points");
         highBoard.printBoard();
@@ -57,9 +56,6 @@ public class Computer {
             if(temp.emptySpace(temp.getSpace(row,col))) {
                 temp.playTile(row, col, hand.get(index));
             }
-            else {
-                return;
-            }
             col++;
         }
         if(score > highScore){
@@ -70,24 +66,37 @@ public class Computer {
     }
 
     public void extendRight(String partialWord, TrieNode node,int row,int col
-            ,int prefixLength){
+            ,int prefixLength,int anchorCol){
         HashMap<Character,TrieNode> children = node.getChildren();
-        int wordLength = board.boardSize - col;
-        if(partialWord.length() - prefixLength > wordLength){
+
+        int wordLength = board.boardSize - anchorCol;
+        int addOnLength = partialWord.length() - prefixLength;
+        if(node.isEndOfWord()){
+            playOnBoard(partialWord,row,anchorCol,prefixLength);
+        }
+        if(addOnLength > wordLength || col > 6){
             return;
         }
-        if(node.isEndOfWord()){
-            playOnBoard(partialWord,row,col,prefixLength);
-        }
-        children.forEach((key,value) ->{
-            if(charHand.contains(key)){
-                charHand.remove(key);
-                extendRight(partialWord + key,children.get(key),row,col
-                        ,prefixLength);
-                charHand.add(key);
+        Space space = board.getSpace(row,col);
+        if(board.inBounds(row,col) && space.getTile() != null){
+            char ch = space.getTile().getLetter();
+            if(children.containsKey(ch)){
+                String addOn = partialWord + ch;
+                int nextCol = col + 1;
+                extendRight(addOn,children.get(ch),row,nextCol,prefixLength,anchorCol);
             }
-        });
-
+        }
+        else {
+            children.forEach((key, value) -> {
+                if (charHand.contains(key)) {
+                    charHand.remove(key);
+                    int nextCol = col + 1;
+                    extendRight(partialWord + key, children.get(key), row, nextCol
+                            , prefixLength, anchorCol);
+                    charHand.add(key);
+                }
+            });
+        }
     }
 
     public String leftPrefix(StringBuilder partialWord,int row ,int col){
