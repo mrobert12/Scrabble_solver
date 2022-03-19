@@ -30,8 +30,13 @@ public class Computer {
             TrieNode node = trie.getNode(prefix);
             extendRight(prefix, node, row, col, prefixLength,col);
         }
-        System.out.println("Solution " + highWord + " has " + highScore + " points");
-        highBoard.printBoard();
+        if(highBoard != null) {
+            System.out.println("Solution " + highWord + " has " + highScore + " points");
+            highBoard.printBoard();
+        }
+        else{
+            System.out.println("No solution found");
+        }
     }
 
     public void playOnBoard(String word,int row, int col,int prefixLength){
@@ -65,13 +70,36 @@ public class Computer {
         }
     }
 
+    public void leftPart(String partialWord, TrieNode node,int row,int col
+            ,int prefixLength){
+        HashMap<Character,TrieNode> children = node.getChildren();
+        if(node.isEndOfWord()){
+            System.out.println(partialWord);
+            playOnBoard(partialWord,row,col,prefixLength);
+        }
+        children.forEach((key,value) ->{
+            if(charHand.contains(key)){
+                charHand.remove(key);
+                leftPart(partialWord + key,children.get(key),row,col
+                        ,prefixLength);
+                charHand.add(key);
+            }
+        });
+
+    }
+
     public void extendRight(String partialWord, TrieNode node,int row,int col
             ,int prefixLength,int anchorCol){
         HashMap<Character,TrieNode> children = node.getChildren();
-
         int wordLength = board.boardSize - anchorCol;
         int addOnLength = partialWord.length() - prefixLength;
-        if(node.isEndOfWord()){
+        System.out.println(partialWord);
+        if(col == 7 && node.isEndOfWord()){
+            playOnBoard(partialWord,row,anchorCol,prefixLength);
+        }
+        else if(col < 7 && board.getSpace(row,col).getTile() == null
+                && node.isEndOfWord()){
+            System.out.println("here");
             playOnBoard(partialWord,row,anchorCol,prefixLength);
         }
         if(addOnLength > wordLength || col > 6){
