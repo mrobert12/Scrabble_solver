@@ -25,10 +25,23 @@ public class Computer {
             StringBuilder partialWord = new StringBuilder();
             int row = anchor.getRow();
             int col = anchor.getCol();
-            String prefix = leftPrefix(partialWord, row, col);
-            int prefixLength = prefix.length();
-            TrieNode node = trie.getNode(prefix);
-            extendRight(prefix, node, row, col, prefixLength,col);
+            System.out.println(row + " " + col);
+            if(col > 0 && board.getLeft(row,col).getTile() != null) {
+                String prefix = leftPrefix(partialWord, row, col);
+                int prefixLength = prefix.length();
+                TrieNode node = trie.getNode(prefix);
+                extendRight(prefix, node, row, col, prefixLength, col);
+            }
+            else{
+                int limit = 0;
+                int scan = col;
+                while(scan > 0 && board.emptySpace(board.getSpace(row,scan))){
+                    limit++;
+                    scan--;
+                }
+                leftPart("", root, row, col, 0, col,limit);
+
+            }
         }
         if(highBoard != null) {
             System.out.println("Solution " + highWord + " has " + highScore + " points");
@@ -63,29 +76,31 @@ public class Computer {
             }
             col++;
         }
-        if(score > highScore){
+        if(score >= highScore){
             highScore = score;
             highBoard = temp;
             highWord = word;
         }
+        System.out.println(score);
+        temp.printBoard();
+        System.out.println();
     }
 
     public void leftPart(String partialWord, TrieNode node,int row,int col
-            ,int prefixLength){
+            ,int prefixLength,int anchorCol,int limit){
+        extendRight(partialWord,node,row,col,prefixLength
+                ,anchorCol - partialWord.length());
         HashMap<Character,TrieNode> children = node.getChildren();
-        if(node.isEndOfWord()){
-            System.out.println(partialWord);
-            playOnBoard(partialWord,row,col,prefixLength);
+        if(limit > 0) {
+            children.forEach((key, value) -> {
+                if (charHand.contains(key)) {
+                    charHand.remove(key);
+                    leftPart(partialWord + key, children.get(key), row, col
+                            , prefixLength, anchorCol, limit - 1);
+                    charHand.add(key);
+                }
+            });
         }
-        children.forEach((key,value) ->{
-            if(charHand.contains(key)){
-                charHand.remove(key);
-                leftPart(partialWord + key,children.get(key),row,col
-                        ,prefixLength);
-                charHand.add(key);
-            }
-        });
-
     }
 
     public void extendRight(String partialWord, TrieNode node,int row,int col
@@ -93,13 +108,11 @@ public class Computer {
         HashMap<Character,TrieNode> children = node.getChildren();
         int wordLength = board.boardSize - anchorCol;
         int addOnLength = partialWord.length() - prefixLength;
-        System.out.println(partialWord);
         if(col == 7 && node.isEndOfWord()){
             playOnBoard(partialWord,row,anchorCol,prefixLength);
         }
         else if(col < 7 && board.getSpace(row,col).getTile() == null
                 && node.isEndOfWord()){
-            System.out.println("here");
             playOnBoard(partialWord,row,anchorCol,prefixLength);
         }
         if(addOnLength > wordLength || col > 6){
