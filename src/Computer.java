@@ -34,11 +34,16 @@ public class Computer {
             }
             else{
                 int limit = 0;
-                int scan = col;
-                while(scan > 0 && board.emptySpace(board.getSpace(row,scan))){
+                int pre = col;
+                if(col > 6){
+                    pre = col - 6;
+                }
+                int scan = pre;
+                while(scan > 0 && board.emptySpace(board.getLeft(row,scan))){
                     limit++;
                     scan--;
                 }
+                limit--;
                 leftPart("", root, row, col, 0, col,limit);
 
             }
@@ -81,6 +86,7 @@ public class Computer {
             highBoard = temp;
             highWord = word;
         }
+        System.out.println(word);
         System.out.println(score);
         temp.printBoard();
         System.out.println();
@@ -91,6 +97,7 @@ public class Computer {
         extendRight(partialWord,node,row,col,prefixLength
                 ,anchorCol - partialWord.length());
         HashMap<Character,TrieNode> children = node.getChildren();
+
         if(limit > 0) {
             children.forEach((key, value) -> {
                 if (charHand.contains(key)) {
