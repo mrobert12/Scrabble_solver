@@ -38,12 +38,15 @@ public class Computer {
                 if(col > 6){
                     pre = col - 6;
                 }
-                int scan = pre;
-                while(scan > 0 && board.emptySpace(board.getLeft(row,scan))){
-                    limit++;
-                    scan--;
+                while(pre > 0 ){
+                    if(board.emptySpace(board.getLeft(row,pre))) {
+                        limit++;
+                        pre--;
+                    }
+                    else{
+                        limit--;
+                    }
                 }
-                limit--;
                 leftPart("", root, row, col, 0, col,limit);
 
             }
@@ -57,31 +60,31 @@ public class Computer {
         }
     }
 
-    public void playOnBoard(String word,int row, int col,int prefixLength){
+    public void playOnBoard(String word,int row, int col,int prefixLength) {
         Board temp = new Board(board.boardSize);
         temp.copyBoard(board.spaces);
         int score = 0;
         char ch;
-        for(int i = 0; i < word.length();i++){
-            if(i < prefixLength){
+        for (int i = 0; i < word.length(); i++) {
+            if (i < prefixLength) {
                 ch = word.charAt(i);
-                score += score(row,col,ch,false);
+                score += score(row, col, ch, false);
                 continue;
             }
             ch = word.charAt(i);
             int index = 0;
-            for(int j = 0;j < hand.size();j++){
-                if(hand.get(j).getLetter() == ch){
+            for (int j = 0; j < hand.size(); j++) {
+                if (hand.get(j).getLetter() == ch) {
                     index = j;
                 }
             }
-            score += score(row,col,ch,true);
-            if(temp.emptySpace(temp.getSpace(row,col))) {
+            score += score(row, col, ch, true);
+            if (temp.emptySpace(temp.getSpace(row, col))) {
                 temp.playTile(row, col, hand.get(index));
             }
             col++;
         }
-        if(score >= highScore){
+        if (score >= highScore) {
             highScore = score;
             highBoard = temp;
             highWord = word;
@@ -116,11 +119,11 @@ public class Computer {
         int wordLength = board.boardSize - anchorCol;
         int addOnLength = partialWord.length() - prefixLength;
         if(col == 7 && node.isEndOfWord()){
-            playOnBoard(partialWord,row,anchorCol,prefixLength);
+            playOnBoard(partialWord, row, anchorCol, prefixLength);
         }
         else if(col < 7 && board.getSpace(row,col).getTile() == null
                 && node.isEndOfWord()){
-            playOnBoard(partialWord,row,anchorCol,prefixLength);
+            playOnBoard(partialWord, row, anchorCol, prefixLength);
         }
         if(addOnLength > wordLength || col > 6){
             return;
