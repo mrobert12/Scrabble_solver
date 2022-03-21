@@ -18,24 +18,24 @@ public class Board{
         for(int i = 0;i < boardSize;i++){
             for(int j = 0; j < boardSize;j++){
                 if(isFilled(i,j)){
-                    if(emptySpace(i,getUp(j))){
-                        if(!anchors.contains(getSpace(i,getUp(j)))){
-                            anchors.add(getSpace(i,getUp(j)));
+                    if(emptySpace(i,getLeft(j))){
+                        if(!anchors.contains(getSpace(i,getLeft(j)))){
+                            anchors.add(getSpace(i,getLeft(j)));
                         }
                     }
-                    if(emptySpace(i,getDown(j))){
-                        if(!anchors.contains(getSpace(i,getDown(j)))){
-                            anchors.add(getSpace(i,getDown(j)));
+                    if(emptySpace(i,getRight(j))){
+                        if(!anchors.contains(getSpace(i,getRight(j)))){
+                            anchors.add(getSpace(i,getRight(j)));
                         }
                     }
-                    if(emptySpace(getLeft(i),j)){
-                        if(!anchors.contains(getSpace(getLeft(i),j))){
-                            anchors.add(getSpace(getLeft(i),j));
+                    if(emptySpace(getUp(i),j)){
+                        if(!anchors.contains(getSpace(getUp(i),j))){
+                            anchors.add(getSpace(getUp(i),j));
                         }
                     }
-                    if(emptySpace(getRight(i),j)){
-                        if(!anchors.contains(getSpace(getRight(i),j))){
-                            anchors.add(getSpace(getRight(i),j));
+                    if(emptySpace(getDown(i),j)){
+                        if(!anchors.contains(getSpace(getDown(i),j))){
+                            anchors.add(getSpace(getDown(i),j));
                         }
                     }
                 }
@@ -133,5 +133,9 @@ public class Board{
 
     public Boolean inBounds(int row, int col){
         return row>= 0 && row < boardSize && col >= 0 && col < boardSize;
+    }
+
+    public Character getTileLetter(int row, int col){
+        return getSpace(row,col).getTile().getLetter();
     }
 }

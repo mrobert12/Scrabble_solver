@@ -23,18 +23,51 @@ public class Computer {
         this.board = board;
         handToCharArray();
         ArrayList<Space> anchors = board.getAnchors();
-        allWords("",trie.getRoot());
         for(Space space : anchors){
             int row = space.getRow();
             int col = space.getCol();
-
+            if(board.isFilled(row,board.getLeft(col))){
+                int left = board.getLeft(col);
+                String prefix = "";
+                while(board.isFilled(row,left)) {
+                    prefix = board.getTileLetter(row,left) + prefix;
+                    left--;
+                }
+                TrieNode node = trie.getNode(prefix);
+                extendRight(prefix,node,row,col);
+            }
         }
     }
 
-    public void allWords(String partialWord,TrieNode node){
+    public void legalMove(String word,int row,int col){
+        System.out.println("Found word: " + word);
+        Board temp = new Board(board.boardSize);
+        temp.copyBoard(board.spaces);
+        int playPos = col;
+        int wordLength = word.length() - 1;
+        for(int i = 0; i < word.length();i++){
+            char ch;
+            while(wordLength >= 0) {
+                System.out.println(wordLength);
+                ch = word.charAt(wordLength);
+                System.out.println(ch);
+                for (Tile tile : hand) {
+                    if (tile.getLetter() == ch) {
+                        temp.playTile(row,playPos,tile);
+                        break;
+                    }
+                }
+                playPos = board.getLeft(playPos);
+                wordLength--;
+            }
+        }
+        temp.printBoard();
+
+    }
+    /*public void allWords(String partialWord,TrieNode node){
         HashMap<Character,TrieNode> children = node.getChildren();
         if(node.isEndOfWord()){
-            System.out.println(partialWord);
+            legalMove(partialWord);
         }
         children.forEach((key,value) ->{
             if(charHand.contains(key)){
@@ -43,6 +76,23 @@ public class Computer {
                 charHand.add(key);
             }
         });
+    }*/
+
+    public void extendRight(String partialWord,TrieNode node,int row, int col){
+        HashMap<Character,TrieNode> children = node.getChildren();
+        if(node.isEndOfWord()){
+            legalMove(partialWord,row,board.getLeft(col));
+        }
+        if(board.inBounds(row,col)) {
+            children.forEach((key, value) -> {
+                if (charHand.contains(key)) {
+                    charHand.remove(key);
+                    extendRight(partialWord + key, children.get(key)
+                            , row, board.getRight(col));
+                    charHand.add(key);
+                }
+            });
+        }
     }
 
     public void handToCharArray(){

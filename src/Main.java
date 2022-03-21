@@ -14,7 +14,7 @@ public class Main {
         Board board = boardFromFile(values,player);
         board.printBoard();
         board.setAnchors();
-        board.printAnchors();
+        //board.printAnchors();
         //player.allWords("",trie.getRoot());
         player.solver(board);
     }
