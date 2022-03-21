@@ -69,18 +69,23 @@ public class Computer {
                     break;
                 }
             }
-            if(wordLength + 1 < prefixLength){
+            if(board.isFilled(row,playPos) && wordLength > prefixLength){
                 score += score(row,playPos,ch,false);
             }
+            if(wordLength < prefixLength){
+                score += score(row,playPos,ch,false);
+            }
+            System.out.println(score + " " + ch);
             playPos = board.getLeft(playPos);
             wordLength--;
         }
-
         if (score >= highScore) {
             highScore = score;
             highBoard = temp;
             highWord = word;
         }
+        temp.printBoard();
+        System.out.println();
     }
     /*public void allWords(String partialWord,TrieNode node){
         HashMap<Character,TrieNode> children = node.getChildren();
@@ -103,14 +108,24 @@ public class Computer {
             legalMove(partialWord,row,board.getLeft(col),prefixLength);
         }
         if(board.inBounds(row,col)) {
-            children.forEach((key, value) -> {
-                if (charHand.contains(key)) {
-                    charHand.remove(key);
-                    extendRight(partialWord + key, children.get(key)
-                            , row, board.getRight(col),prefixLength);
-                    charHand.add(key);
+            if(board.emptySpace(row,col)) {
+                children.forEach((key, value) -> {
+                    if (charHand.contains(key)) {
+                        charHand.remove(key);
+                        extendRight(partialWord + key, children.get(key)
+                                , row, board.getRight(col), prefixLength);
+                        charHand.add(key);
+                    }
+                });
+            }
+            else{
+                char tileLetter = board.getTileLetter(row,col);
+                if(children.containsKey(tileLetter)){
+                    extendRight(partialWord + tileLetter,
+                            children.get(tileLetter),row,board.getRight(col)
+                            ,prefixLength);
                 }
-            });
+            }
         }
     }
     public int score(int row,int col,char ch,Boolean spaceBonus){
