@@ -45,6 +45,7 @@ public class Computer {
         }
         if(highBoard != null) {
             System.out.println("Solution " + highWord + " has " + highScore + " points");
+            System.out.println("Solution Board: ");
             highBoard.printBoard();
         }
         else{
@@ -53,7 +54,7 @@ public class Computer {
     }
 
     public void legalMove(String word,int row,int col,int prefixLength){
-        System.out.println("Found word: " + word);
+        //System.out.println("Found word: " + word);
         Board temp = new Board(board.boardSize);
         temp.copyBoard(board.spaces);
         int playPos = col;
@@ -75,7 +76,6 @@ public class Computer {
             if(wordLength < prefixLength){
                 score += score(row,playPos,ch,false);
             }
-            System.out.println(score + " " + ch);
             playPos = board.getLeft(playPos);
             wordLength--;
         }
@@ -84,8 +84,8 @@ public class Computer {
             highBoard = temp;
             highWord = word;
         }
-        temp.printBoard();
-        System.out.println();
+        /*temp.printBoard();
+        System.out.println();*/
     }
     /*public void allWords(String partialWord,TrieNode node){
         HashMap<Character,TrieNode> children = node.getChildren();
@@ -104,7 +104,7 @@ public class Computer {
     public void extendRight(String partialWord,TrieNode node,int row, int col
             ,int prefixLength){
         HashMap<Character,TrieNode> children = node.getChildren();
-        if(node.isEndOfWord()){
+        if(board.emptySpace(row,col) && node.isEndOfWord()){
             legalMove(partialWord,row,board.getLeft(col),prefixLength);
         }
         if(board.inBounds(row,col)) {
