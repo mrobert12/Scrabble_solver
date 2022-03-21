@@ -22,6 +22,11 @@ public class Computer {
     public void solver(Board board){
         this.board = board;
         handToCharArray();
+        System.out.print("Tray: ");
+        for (Character character : charHand) {
+            System.out.print(character);
+        }
+        System.out.println();
         ArrayList<Space> anchors = board.getAnchors();
         for(Space space : anchors){
             int row = space.getRow();
@@ -33,36 +38,49 @@ public class Computer {
                     prefix = board.getTileLetter(row,left) + prefix;
                     left--;
                 }
+                int prefixLength = prefix.length();
                 TrieNode node = trie.getNode(prefix);
-                extendRight(prefix,node,row,col);
+                extendRight(prefix,node,row,col,prefixLength);
             }
+        }
+        if(highBoard != null) {
+            System.out.println("Solution " + highWord + " has " + highScore + " points");
+            highBoard.printBoard();
+        }
+        else{
+            System.out.println("No solution found");
         }
     }
 
-    public void legalMove(String word,int row,int col){
+    public void legalMove(String word,int row,int col,int prefixLength){
         System.out.println("Found word: " + word);
         Board temp = new Board(board.boardSize);
         temp.copyBoard(board.spaces);
         int playPos = col;
         int wordLength = word.length() - 1;
-        for(int i = 0; i < word.length();i++){
-            char ch;
-            while(wordLength >= 0) {
-                System.out.println(wordLength);
-                ch = word.charAt(wordLength);
-                System.out.println(ch);
-                for (Tile tile : hand) {
-                    if (tile.getLetter() == ch) {
-                        temp.playTile(row,playPos,tile);
-                        break;
-                    }
+        int score = 0;
+        char ch;
+        while(wordLength >= 0) {
+            ch = word.charAt(wordLength);
+            for (Tile tile : hand) {
+                if (tile.getLetter() == ch) {
+                    temp.playTile(row,playPos,tile);
+                    score += score(row,playPos,ch,true);
+                    break;
                 }
-                playPos = board.getLeft(playPos);
-                wordLength--;
             }
+            if(wordLength + 1 < prefixLength){
+                score += score(row,playPos,ch,false);
+            }
+            playPos = board.getLeft(playPos);
+            wordLength--;
         }
-        temp.printBoard();
 
+        if (score >= highScore) {
+            highScore = score;
+            highBoard = temp;
+            highWord = word;
+        }
     }
     /*public void allWords(String partialWord,TrieNode node){
         HashMap<Character,TrieNode> children = node.getChildren();
@@ -78,21 +96,35 @@ public class Computer {
         });
     }*/
 
-    public void extendRight(String partialWord,TrieNode node,int row, int col){
+    public void extendRight(String partialWord,TrieNode node,int row, int col
+            ,int prefixLength){
         HashMap<Character,TrieNode> children = node.getChildren();
         if(node.isEndOfWord()){
-            legalMove(partialWord,row,board.getLeft(col));
+            legalMove(partialWord,row,board.getLeft(col),prefixLength);
         }
         if(board.inBounds(row,col)) {
             children.forEach((key, value) -> {
                 if (charHand.contains(key)) {
                     charHand.remove(key);
                     extendRight(partialWord + key, children.get(key)
-                            , row, board.getRight(col));
+                            , row, board.getRight(col),prefixLength);
                     charHand.add(key);
                 }
             });
         }
+    }
+    public int score(int row,int col,char ch,Boolean spaceBonus){
+        int score;
+        Space space = board.getSpace(row,col);
+        int tMult = space.getTileMult();
+        int wMult = space.getWordMult();
+        if(spaceBonus) {
+            score = values[ch - 'a'] * tMult * wMult;
+        }
+        else{
+            score = values[ch -'a'];
+        }
+        return score;
     }
 
     public void handToCharArray(){
