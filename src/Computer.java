@@ -84,8 +84,8 @@ public class Computer {
             highBoard = temp;
             highWord = word;
         }
-        /*temp.printBoard();
-        System.out.println();*/
+        temp.printBoard();
+        System.out.println();
     }
     /*public void allWords(String partialWord,TrieNode node){
         HashMap<Character,TrieNode> children = node.getChildren();
@@ -104,7 +104,7 @@ public class Computer {
     public void extendRight(String partialWord,TrieNode node,int row, int col
             ,int prefixLength){
         HashMap<Character,TrieNode> children = node.getChildren();
-        if(board.emptySpace(row,col) && node.isEndOfWord()){
+        if(!board.isFilled(row,col) && node.isEndOfWord()){
             legalMove(partialWord,row,board.getLeft(col),prefixLength);
         }
         if(board.inBounds(row,col)) {
