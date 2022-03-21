@@ -7,17 +7,16 @@ public class Main {
         Trie trie = new Trie();
         File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\twl06");
         int[] values = new int[26];
-        Computer player = new Computer();
+        Computer player = new Computer(trie,values);
         setValues(values);
         readDictionary(dictionary,trie);
         //Board board = readBoard(values,player);
         Board board = boardFromFile(values,player);
         board.printBoard();
         board.setAnchors();
-        //board.printAnchors();
-        player.handToCharArray();
+        board.printAnchors();
         //player.allWords("",trie.getRoot());
-        player.Solver(board,trie,values);
+        player.solver(board);
     }
 
     public static void readDictionary(File dictionary,Trie trie){
