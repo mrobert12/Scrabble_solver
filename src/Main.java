@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\twl06");
+        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\sowpods");
         int[] values = new int[26];
         Computer player = new Computer(trie,values);
         setValues(values);

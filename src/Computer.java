@@ -44,12 +44,32 @@ public class Computer {
             else{
                 int limit = 0;
                 int left = board.getLeft(col);
-                while(board.emptySpace(row,left)){
+                while(board.emptySpace(row,left)
+                        && !anchors.contains(board.getSpace(row,left))){
                     limit++;
                     left = board.getLeft(left);
                 }
-
                 leftPart("",trie.getRoot(),row,col,limit);
+            }
+            if(board.isFilled(board.getUp(row),col)){
+                int up = board.getUp(row);
+                String prefix = "";
+                while(board.isFilled(up,col)) {
+                    prefix = board.getTileLetter(up,col) + prefix;
+                    up--;
+                }
+                TrieNode node = trie.getNode(prefix);
+                extendDown(prefix,node,row,col);
+            }
+            else{
+                int limit = 0;
+                int up = board.getUp(row);
+                while(board.emptySpace(up,col)
+                        && !anchors.contains(board.getSpace(up,col))){
+                    limit++;
+                    up = board.getLeft(up);
+                }
+                upPart("",trie.getRoot(),row,col,limit);
             }
         }
         if(highBoard != null) {
@@ -62,7 +82,7 @@ public class Computer {
         }
     }
 
-    public void legalMove(String word,int row,int col){
+    public void legalMoveAcross(String word,int row,int col){
         Board temp = new Board(board.boardSize);
         temp.copyBoard(board.spaces);
         int playPos = col;
@@ -111,10 +131,6 @@ public class Computer {
             highBoard = temp;
             highWord = word;
         }
-        System.out.println(word);
-        System.out.println(score);
-        temp.printBoard();
-        System.out.println();
     }
 
     public void leftPart(String partialWord,TrieNode node,int row,int col
@@ -136,7 +152,7 @@ public class Computer {
     public void extendRight(String partialWord,TrieNode node,int row, int col){
         HashMap<Character,TrieNode> children = node.getChildren();
         if(!board.isFilled(row,col) && node.isEndOfWord()){
-            legalMove(partialWord,row,board.getLeft(col));
+            legalMoveAcross(partialWord,row,board.getLeft(col));
         }
         if(board.inBounds(row,col)) {
             if(board.emptySpace(row,col)) {
@@ -159,6 +175,103 @@ public class Computer {
         }
     }
 
+    public void legalMoveDown(String word,int row,int col){
+        Board temp = new Board(board.boardSize);
+        temp.copyBoard(board.spaces);
+        int playPos = row;
+        int wordLength = word.length() - 1;
+        int score = 0;
+        char ch;
+        while(wordLength >= 0) {
+            ch = word.charAt(wordLength);
+            if(board.emptySpace(playPos,col)) {
+                String left = "";
+                String right = "";
+                if(board.isFilled(playPos,board.getLeft(col))) {
+                    left = getLettersLeft(playPos, col);
+                    for(int i = 0; i < left.length();i++){
+                        char leftChar = left.charAt(i);
+                        score += values[leftChar - 'a'];
+                    }
+                }
+                if(board.isFilled(playPos,board.getRight(col))) {
+                    right = getLettersRight(playPos, col);
+                    for(int i = 0; i < right.length();i++){
+                        char rightChar = right.charAt(i);
+                        score += values[rightChar - 'a'];
+                    }
+                }
+                String acrossWord = left + ch + right;
+                if(trie.search(acrossWord) || acrossWord.length() == 1) {
+                    for (Tile tile : hand) {
+                        if (tile.getLetter() == ch) {
+                            temp.playTile(playPos, col, tile);
+                            score += score(playPos, col, ch, true);
+                            break;
+                        }
+                    }
+                }
+                else{return;}
+            }
+            else if (board.isFilled(playPos, col)) {
+                score += score(playPos, col, ch, false);
+            }
+            playPos = board.getUp(playPos);
+            wordLength--;
+        }
+        if (score >= highScore) {
+            highScore = score;
+            highBoard = temp;
+            highWord = word;
+        }
+        /*System.out.println(word);
+        System.out.println(score);
+        temp.printBoard();
+        System.out.println();*/
+    }
+
+    public void upPart(String partialWord,TrieNode node,int row,int col
+            ,int limit){
+        HashMap<Character,TrieNode> children = node.getChildren();
+        extendDown(partialWord,node,row,col);
+        if(limit > 0) {
+            children.forEach((key, value) -> {
+                if (charHand.contains(key)) {
+                    charHand.remove(key);
+                    upPart(partialWord + key, children.get(key), row, col
+                            , limit - 1);
+                    charHand.add(key);
+                }
+            });
+        }
+    }
+
+    public void extendDown(String partialWord,TrieNode node,int row, int col){
+        HashMap<Character,TrieNode> children = node.getChildren();
+        if(!board.isFilled(row,col) && node.isEndOfWord()){
+            legalMoveDown(partialWord,board.getUp(row),col);
+        }
+        if(board.inBounds(row,col)) {
+            if(board.emptySpace(row,col)) {
+                children.forEach((key, value) -> {
+                    if (charHand.contains(key)) {
+                        charHand.remove(key);
+                        extendDown(partialWord + key,
+                                children.get(key), board.getDown(row), col);
+                        charHand.add(key);
+                    }
+                });
+            }
+            else{
+                char tileLetter = board.getTileLetter(row,col);
+                if(children.containsKey(tileLetter)){
+                    extendDown(partialWord + tileLetter,
+                            children.get(tileLetter),board.getDown(row),col);
+                }
+            }
+        }
+    }
+
 
     public int score(int row,int col,char ch,Boolean spaceBonus){
         int score;
@@ -172,6 +285,24 @@ public class Computer {
             score = values[ch -'a'];
         }
         return score;
+    }
+    public String getLettersLeft(int row,int col){
+        int left = board.getLeft(col);
+        String lettersLeft = "";
+        while(board.isFilled(row,left)){
+            lettersLeft = board.getTileLetter(row,left) + lettersLeft;
+            left = board.getLeft(left);
+        }
+        return lettersLeft;
+    }
+    public String getLettersRight(int row,int col){
+        int right = board.getRight(col);
+        String lettersRight = "";
+        while(board.isFilled(row,right)){
+            lettersRight = board.getTileLetter(row,right) + lettersRight;
+            right = board.getRight(right);
+        }
+        return lettersRight;
     }
 
     public String getLettersUp(int row,int col){
