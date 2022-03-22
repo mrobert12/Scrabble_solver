@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class Computer {
     ArrayList<Tile> hand = new ArrayList<>();
@@ -88,7 +89,9 @@ public class Computer {
         int playPos = col;
         int wordLength = word.length() - 1;
         int score = 0;
+        int wordMulti = 1;
         char ch;
+        int tilesPlayed = 0;
         while(wordLength >= 0) {
             ch = word.charAt(wordLength);
             if(board.emptySpace(row,playPos)) {
@@ -98,22 +101,36 @@ public class Computer {
                     up = getLettersUp(row, playPos);
                     for(int i = 0; i < up.length();i++){
                         char upChar = up.charAt(i);
-                        score += values[upChar - 'a'];
+                        if(Character.isUpperCase(upChar)){
+                            score += 0;
+                        }
+                        else {
+                            score += values[upChar - 'a'];
+                        }
                     }
                 }
                 if(board.isFilled(board.getDown(row),playPos)) {
                     down = getLettersDown(row, playPos);
                     for(int i = 0; i < down.length();i++){
                         char downChar = down.charAt(i);
-                        score += values[downChar - 'a'];
+                        if(Character.isUpperCase(downChar)){
+                            score += 0;
+                        }
+                        else {
+                            score += values[downChar - 'a'];
+                        }
                     }
                 }
                 String upDownWord = up + ch + down;
+                upDownWord = upDownWord.toLowerCase(Locale.ROOT);
                 if(trie.search(upDownWord) || upDownWord.length() == 1) {
                     for (Tile tile : hand) {
                         if (tile.getLetter() == ch) {
                             temp.playTile(row, playPos, tile);
-                            score += score(row, playPos, ch, true);
+                            Space space = board.getSpace(row,playPos);
+                            wordMulti *= space.getWordMult();
+                            score += (values[ch - 'a'] * space.getTileMult());
+                            tilesPlayed++;
                             break;
                         }
                     }
@@ -121,10 +138,19 @@ public class Computer {
                 else{return;}
             }
             else if (board.isFilled(row, playPos)) {
-                score += score(row, playPos, ch, false);
+                if(Character.isUpperCase(ch)){
+                    score += 0;
+                }
+                else {
+                    score += values[ch - 'a'];
+                }
             }
             playPos = board.getLeft(playPos);
             wordLength--;
+        }
+        score *= wordMulti;
+        if(tilesPlayed == 7){
+            score += 50;
         }
         if (score >= highScore) {
             highScore = score;
@@ -181,7 +207,9 @@ public class Computer {
         int playPos = row;
         int wordLength = word.length() - 1;
         int score = 0;
+        int wordMulti = 1;
         char ch;
+        int tilesPlayed = 0;
         while(wordLength >= 0) {
             ch = word.charAt(wordLength);
             if(board.emptySpace(playPos,col)) {
@@ -191,22 +219,37 @@ public class Computer {
                     left = getLettersLeft(playPos, col);
                     for(int i = 0; i < left.length();i++){
                         char leftChar = left.charAt(i);
-                        score += values[leftChar - 'a'];
+                        if(leftChar > 'A' && leftChar < 'Z'){
+                            score += 0;
+                        }
+                        else {
+                            score += values[leftChar - 'a'];
+                        }
                     }
                 }
                 if(board.isFilled(playPos,board.getRight(col))) {
                     right = getLettersRight(playPos, col);
                     for(int i = 0; i < right.length();i++){
                         char rightChar = right.charAt(i);
-                        score += values[rightChar - 'a'];
+                        if(rightChar > 'A' && rightChar < 'Z'){
+                            score += 0;
+                        }
+                        else {
+                            score += values[rightChar - 'a'];
+                        }
                     }
                 }
                 String acrossWord = left + ch + right;
+                acrossWord = acrossWord.toLowerCase(Locale.ROOT);
                 if(trie.search(acrossWord) || acrossWord.length() == 1) {
                     for (Tile tile : hand) {
                         if (tile.getLetter() == ch) {
                             temp.playTile(playPos, col, tile);
-                            score += score(playPos, col, ch, true);
+                            Space space = board.getSpace(playPos,col);
+                            wordMulti *= space.getWordMult();
+                            int tileScore = values[ch - 'a'] * space.getTileMult();
+                            score += tileScore;
+                            tilesPlayed++;
                             break;
                         }
                     }
@@ -214,20 +257,29 @@ public class Computer {
                 else{return;}
             }
             else if (board.isFilled(playPos, col)) {
-                score += score(playPos, col, ch, false);
+                if(Character.isUpperCase(ch)){
+                    score += 0;
+                }
+                else {
+                    score += values[ch - 'a'];
+                }
             }
             playPos = board.getUp(playPos);
             wordLength--;
+        }
+        score *= wordMulti;
+        if(tilesPlayed == 7){
+            score += 50;
         }
         if (score >= highScore) {
             highScore = score;
             highBoard = temp;
             highWord = word;
         }
-        /*System.out.println(word);
+        System.out.println(word);
         System.out.println(score);
         temp.printBoard();
-        System.out.println();*/
+        System.out.println();
     }
 
     public void upPart(String partialWord,TrieNode node,int row,int col
@@ -272,20 +324,6 @@ public class Computer {
         }
     }
 
-
-    public int score(int row,int col,char ch,Boolean spaceBonus){
-        int score;
-        Space space = board.getSpace(row,col);
-        int tMult = space.getTileMult();
-        int wMult = space.getWordMult();
-        if(spaceBonus) {
-            score = values[ch - 'a'] * tMult * wMult;
-        }
-        else{
-            score = values[ch -'a'];
-        }
-        return score;
-    }
     public String getLettersLeft(int row,int col){
         int left = board.getLeft(col);
         String lettersLeft = "";

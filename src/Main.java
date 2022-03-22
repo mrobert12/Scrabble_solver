@@ -14,6 +14,13 @@ public class Main {
         Board board = boardFromFile(values,player);
         board.printBoard();
         board.setAnchors();
+        Board test = new Board(board.boardSize);
+        Space[][] spaces = board.spaces;
+        /*for(int i = 0;i< board.boardSize;i++){
+            for(int j = 0; j < board.boardSize;j++){
+                System.out.println(i + " " + j +" Word: " + spaces[i][j].getWordMult() + " Tile: " + spaces[i][j].getTileMult());
+            }
+        }*/
         //board.printAnchors();
         //player.allWords("",trie.getRoot());
         player.solver(board);
@@ -139,12 +146,12 @@ public class Main {
                     board.addSpace(space,i,j);
                 }
                 else if(first == '.'){
-                    space = new Space(1,second - '0',i,j
+                    space = new Space(second - '0',1,i,j
                             ,null);
                     board.addSpace(space,i,j);
                 }
                 else if(first - '0' >= 0 && first - '0' <= 9){
-                    space = new Space (first - '0',1,i,j
+                    space = new Space (1,first - '0',i,j
                             ,null);
                     board.addSpace(space,i,j);
                 }
@@ -154,8 +161,7 @@ public class Main {
                     board.addSpace(space,i,j);
                 }
                 else if(first >= 'A' && first <= 'Z'){
-                    Tile tile = new Tile(Character.toLowerCase(first)
-                            ,0);
+                    Tile tile = new Tile(first,0);
                     space = new Space(1,1,i,j,tile);
                     board.addSpace(space,i,j);
                 }
