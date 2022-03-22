@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\sowpods");
+        File dictionary = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\sowpods");
         int[] values = new int[26];
         Computer player = new Computer(trie,values);
         setValues(values);
@@ -14,13 +14,6 @@ public class Main {
         Board board = boardFromFile(values,player);
         board.printBoard();
         board.setAnchors();
-        Board test = new Board(board.boardSize);
-        Space[][] spaces = board.spaces;
-        /*for(int i = 0;i< board.boardSize;i++){
-            for(int j = 0; j < board.boardSize;j++){
-                System.out.println(i + " " + j +" Word: " + spaces[i][j].getWordMult() + " Tile: " + spaces[i][j].getTileMult());
-            }
-        }*/
         //board.printAnchors();
         //player.allWords("",trie.getRoot());
         player.solver(board);
@@ -98,7 +91,7 @@ public class Main {
     }
 
     public static void setValues(int[] values){
-        File tileValues = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\Scrabble tiles");
+        File tileValues = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\Scrabble tiles");
         Scanner scan = null;
         try {
             scan = new Scanner(tileValues);
@@ -120,7 +113,7 @@ public class Main {
     }
 
     public static Board boardFromFile(int[] values,Computer player){
-        File file = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\testBoard");
+        File file = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\testBoard");
         Scanner input = null;
         try {
             input = new Scanner(file);
