@@ -276,10 +276,10 @@ public class Computer {
             highBoard = temp;
             highWord = word;
         }
-        System.out.println(word);
+        /*System.out.println(word);
         System.out.println(score);
         temp.printBoard();
-        System.out.println();
+        System.out.println();*/
     }
 
     public void upPart(String partialWord,TrieNode node,int row,int col
