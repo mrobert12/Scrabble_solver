@@ -68,13 +68,14 @@ public class Computer {
                 while(board.emptySpace(up,col)
                         && !anchors.contains(board.getSpace(up,col))){
                     limit++;
-                    up = board.getLeft(up);
+                    up = board.getUp(up);
                 }
                 upPart("",trie.getRoot(),row,col,limit,row,col);
             }
         }
         if(highBoard != null) {
-            System.out.println("Solution " + highWord + " has " + highScore + " points");
+            System.out.println("Solution " + highWord + " has " + highScore
+                    + " points");
             System.out.println("Solution Board: ");
             highBoard.printBoard();
         }
@@ -106,18 +107,29 @@ public class Computer {
                 if(board.isFilled(board.getDown(row),playPos)) {
                     down = getLettersDown(row, playPos);
                 }
-                String upDownWord = up + ch + down;
+                String upDownWord = up + Character.toLowerCase(ch) + down;
                 upDownWord = upDownWord.toLowerCase(Locale.ROOT);
                 if(trie.search(upDownWord) || upDownWord.length() == 1) {
-                    for (Tile tile : hand) {
-                        if (tile.getLetter() == ch) {
-                            temp.playTile(row, playPos, tile);
-                            Space space = board.getSpace(row,playPos);
-                            playedSpaces.add(space);
-                            wordMult *= space.getWordMult();
-                            wordScore += values[ch - 'a'] * space.getTileMult();
-                            tilesPlayed++;
-                            break;
+                    if(Character.isUpperCase(ch)){
+                        Tile blank = new Tile(ch,0);
+                        temp.playTile(row,playPos,blank);
+                        Space space = board.getSpace(row,playPos);
+                        wordMult *= space.getWordMult();
+                        playedSpaces.add(space);
+                        tilesPlayed++;
+                    }
+                    else {
+                        for (Tile tile : hand) {
+                            if (tile.getLetter() == ch) {
+                                temp.playTile(row, playPos, tile);
+                                Space space = board.getSpace(row, playPos);
+                                playedSpaces.add(space);
+                                wordMult *= space.getWordMult();
+                                wordScore += values[ch - 'a']
+                                        * space.getTileMult();
+                                tilesPlayed++;
+                                break;
+                            }
                         }
                     }
                 }
@@ -133,7 +145,10 @@ public class Computer {
         if(temp.isFilled(anchorRow,anchorCol)) {
             score = Score(temp,playedSpaces,tilesPlayed == 7,true,
                     wordScore);
-            if (score >= highScore) {
+            /*System.out.println(word);
+            System.out.println(score);
+            temp.printBoard();*/
+            if (score > highScore) {
             highScore = score;
             highBoard = temp;
             highWord = word;
@@ -147,11 +162,21 @@ public class Computer {
         extendRight(partialWord,node,row,col,anchorRow,anchorCol);
         if(limit > 0) {
             children.forEach((key, value) -> {
-                if (charHand.contains(key)) {
-                    charHand.remove(key);
-                    leftPart(partialWord + key, children.get(key), row, col
-                            , limit - 1,anchorRow,anchorCol);
-                    charHand.add(key);
+                for(int i = 0; i < charHand.size();i++){
+                    if(charHand.get(i) == '*'){
+                        charHand.remove(i);
+                        leftPart(
+                             partialWord + Character.toUpperCase(key),
+                                children.get(key),row,col,limit -1,
+                                anchorRow,anchorCol);
+                        charHand.add('*');
+                    }
+                    else if(charHand.get(i) == key){
+                        charHand.remove(key);
+                        leftPart(partialWord + key, children.get(key),
+                                row, col,limit - 1,anchorRow,anchorCol);
+                        charHand.add(key);
+                    }
                 }
             });
         }
@@ -167,11 +192,22 @@ public class Computer {
         if(board.inBounds(row,col)) {
             if(board.emptySpace(row,col)) {
                 children.forEach((key, value) -> {
-                    if (charHand.contains(key)) {
-                        charHand.remove(key);
-                        extendRight(partialWord + key, children.get(key)
-                                , row, board.getRight(col),anchorRow,anchorCol);
-                        charHand.add(key);
+                    for(int i = 0; i < charHand.size();i++){
+                        if(charHand.get(i) == '*'){
+                            charHand.remove(i);
+                            extendRight(
+                             partialWord + Character.toUpperCase(key),
+                                    children.get(key),row,board.getRight(col),
+                                    anchorRow,anchorCol);
+                            charHand.add('*');
+                        }
+                        else if(charHand.get(i) == key){
+                            charHand.remove(key);
+                            extendRight(partialWord + key,
+                                    children.get(key), row, board.getRight(col),
+                                    anchorRow,anchorCol);
+                            charHand.add(key);
+                        }
                     }
                 });
             }
@@ -209,18 +245,28 @@ public class Computer {
                 if(board.isFilled(playPos,board.getRight(col))) {
                     right = getLettersRight(playPos, col);
                 }
-                String acrossWord = left + ch + right;
+                String acrossWord = left + Character.toLowerCase(ch) + right;
                 acrossWord = acrossWord.toLowerCase(Locale.ROOT);
                 if(trie.search(acrossWord) || acrossWord.length() == 1) {
-                    for (Tile tile : hand) {
-                        if (tile.getLetter() == ch) {
-                            temp.playTile(playPos, col, tile);
-                            Space space = board.getSpace(playPos,col);
-                            playedSpaces.add(space);
-                            wordMult *= space.getWordMult();
-                            wordScore += values[ch - 'a'] * space.getTileMult();
-                            tilesPlayed++;
-                            break;
+                    if(Character.isUpperCase(ch)){
+                        Tile blank = new Tile(ch,0);
+                        temp.playTile(playPos,col,blank);
+                        Space space = board.getSpace(playPos,col);
+                        wordMult *= space.getWordMult();
+                        playedSpaces.add(space);
+                        tilesPlayed++;
+                    }
+                    else {
+                        for (Tile tile : hand) {
+                            if (tile.getLetter() == ch) {
+                                temp.playTile(playPos, col, tile);
+                                Space space = board.getSpace(playPos, col);
+                                playedSpaces.add(space);
+                                wordMult *= space.getWordMult();
+                                wordScore += values[ch - 'a'] * space.getTileMult();
+                                tilesPlayed++;
+                                break;
+                            }
                         }
                     }
                 }
@@ -242,7 +288,7 @@ public class Computer {
             System.out.println("WS: "+ wordScore);
             System.out.println(score);
             temp.printBoard();*/
-            if (score >= highScore) {
+            if (score > highScore) {
                 highScore = score;
                 highBoard = temp;
                 highWord = word;
@@ -256,11 +302,20 @@ public class Computer {
         extendDown(partialWord,node,row,col,anchorRow,anchorCol);
         if(limit > 0) {
             children.forEach((key, value) -> {
-                if (charHand.contains(key)) {
-                    charHand.remove(key);
-                    upPart(partialWord + key, children.get(key), row, col
-                            , limit - 1,anchorRow,anchorCol);
-                    charHand.add(key);
+                for(int i = 0; i < charHand.size();i++){
+                    if(charHand.get(i) == '*'){
+                        charHand.remove(i);
+                        upPart(partialWord + Character.toUpperCase(key),
+                                children.get(key),row,col,limit -1,
+                                anchorRow,anchorCol);
+                        charHand.add('*');
+                    }
+                    else if(charHand.get(i) == key){
+                        charHand.remove(key);
+                        upPart(partialWord + key, children.get(key)
+                                , row, col, limit - 1,anchorRow,anchorCol);
+                        charHand.add(key);
+                    }
                 }
             });
         }
@@ -275,12 +330,22 @@ public class Computer {
         if(board.inBounds(row,col)) {
             if(board.emptySpace(row,col)) {
                 children.forEach((key, value) -> {
-                    if (charHand.contains(key)) {
-                        charHand.remove(key);
-                        extendDown(partialWord + key,
-                                children.get(key), board.getDown(row), col,
-                                anchorRow,anchorCol);
-                        charHand.add(key);
+                    for(int i = 0; i < charHand.size();i++){
+                        if(charHand.get(i) == '*'){
+                            charHand.remove(i);
+                            extendDown(
+                             partialWord + Character.toUpperCase(key),
+                                    children.get(key),board.getDown(row),col,
+                                    anchorRow,anchorCol);
+                            charHand.add('*');
+                        }
+                        else if(charHand.get(i) == key){
+                            charHand.remove(key);
+                            extendDown(partialWord + key,
+                                    children.get(key), board.getDown(row), col,
+                                    anchorRow,anchorCol);
+                            charHand.add(key);
+                        }
                     }
                 });
             }
@@ -342,7 +407,6 @@ public class Computer {
     public int Score(Board temp, ArrayList<Space> playedSpaces,Boolean bonus
             ,Boolean across,int wordScore){
         int score = 0;
-        int wordMult = 1;
         int row;
         int col;
         for(Space space: playedSpaces){
@@ -351,7 +415,6 @@ public class Computer {
             Space boardSpace = temp.getSpace(row,col);
             Tile tile = boardSpace.getTile();
             int tileMult = boardSpace.getTileMult();
-            wordMult *= boardSpace.getWordMult();
             int sideWordScore = 0;
             if(across){
                 String up;
@@ -398,7 +461,9 @@ public class Computer {
                 }
             }
             if(sideWordScore != 0) {
-                sideWordScore += (values[tile.getLetter() - 'a'] * tileMult);
+                if(Character.isLowerCase(tile.getLetter())) {
+                    sideWordScore += (values[tile.getLetter() - 'a'] * tileMult);
+                }
                 sideWordScore *= boardSpace.getWordMult();
                 score += sideWordScore;
             }
