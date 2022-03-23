@@ -8,7 +8,7 @@ public class Trie {
         TrieNode node = root;
         char ch;
         for(int i = 0; i < word.length();i++){
-            ch = word.charAt(i);
+            ch = Character.toLowerCase((word.charAt(i)));
             if(children.containsKey(ch)){
                 node = children.get(ch);
             }
