@@ -91,6 +91,8 @@ public class Computer {
         int playPos = col;
         int wordLength = word.length() - 1;
         int score;
+        int wordScore = 0;
+        int wordMult = 1;
         char ch;
         int tilesPlayed = 0;
         while(wordLength >= 0) {
@@ -112,6 +114,8 @@ public class Computer {
                             temp.playTile(row, playPos, tile);
                             Space space = board.getSpace(row,playPos);
                             playedSpaces.add(space);
+                            wordMult *= space.getWordMult();
+                            wordScore += values[ch - 'a'] * space.getTileMult();
                             tilesPlayed++;
                             break;
                         }
@@ -119,11 +123,16 @@ public class Computer {
                 }
                 else{return;}
             }
+            else{
+                wordScore += values[ch - 'a'];
+            }
             playPos = board.getLeft(playPos);
             wordLength--;
         }
+        wordScore *= wordMult;
         if(temp.isFilled(anchorRow,anchorCol)) {
-            score = Score(temp,playedSpaces,tilesPlayed == 7,true);
+            score = Score(temp,playedSpaces,tilesPlayed == 7,true,
+                    wordScore);
             if (score >= highScore) {
             highScore = score;
             highBoard = temp;
@@ -184,6 +193,8 @@ public class Computer {
         ArrayList<Space> playedSpaces = new ArrayList<>();
         int playPos = row;
         int wordLength = word.length() - 1;
+        int wordScore = 0;
+        int wordMult = 1;
         int score;
         char ch;
         int tilesPlayed = 0;
@@ -206,6 +217,8 @@ public class Computer {
                             temp.playTile(playPos, col, tile);
                             Space space = board.getSpace(playPos,col);
                             playedSpaces.add(space);
+                            wordMult *= space.getWordMult();
+                            wordScore += values[ch - 'a'] * space.getTileMult();
                             tilesPlayed++;
                             break;
                         }
@@ -213,12 +226,20 @@ public class Computer {
                 }
                 else{return;}
             }
+            else{
+                if(!Character.isUpperCase(ch)) {
+                    wordScore += values[ch - 'a'];
+                }
+            }
             playPos = board.getUp(playPos);
             wordLength--;
         }
+        wordScore *= wordMult;
         if(temp.isFilled(anchorRow,anchorCol)) {
-            score = Score(temp, playedSpaces, tilesPlayed == 7, false);
+            score = Score(temp, playedSpaces, tilesPlayed == 7,
+                    false, wordScore);
             System.out.println(word);
+            System.out.println("WS: "+ wordScore);
             System.out.println(score);
             temp.printBoard();
             if (score >= highScore) {
@@ -318,10 +339,10 @@ public class Computer {
             charHand.add(tile.getLetter());
         }
     }
-    public int Score(Board temp, ArrayList<Space> playedSpaces,Boolean bonus,Boolean across){
+    public int Score(Board temp, ArrayList<Space> playedSpaces,Boolean bonus
+            ,Boolean across,int wordScore){
         int score = 0;
         int wordMult = 1;
-        int wordScore = 0;
         int row;
         int col;
         for(Space space: playedSpaces){
@@ -331,7 +352,6 @@ public class Computer {
             Tile tile = boardSpace.getTile();
             int tileMult = boardSpace.getTileMult();
             wordMult *= boardSpace.getWordMult();
-            wordScore += values[tile.getLetter() - 'a'] * tileMult;
             int sideWordScore = 0;
             if(across){
                 String up;
@@ -353,11 +373,6 @@ public class Computer {
                             sideWordScore += values[downChar - 'a'];
                         }
                     }
-                }
-                if(sideWordScore != 0) {
-                    sideWordScore += (values[tile.getLetter() - 'a'] * tileMult);
-                    sideWordScore *= boardSpace.getWordMult();
-                    score += sideWordScore;
                 }
             }
             else{
@@ -381,14 +396,13 @@ public class Computer {
                         }
                     }
                 }
-                if(sideWordScore != 0) {
-                    sideWordScore += (values[tile.getLetter() - 'a'] * tileMult);
-                    sideWordScore *= boardSpace.getWordMult();
-                    score += sideWordScore;
-                }
+            }
+            if(sideWordScore != 0) {
+                sideWordScore += (values[tile.getLetter() - 'a'] * tileMult);
+                sideWordScore *= boardSpace.getWordMult();
+                score += sideWordScore;
             }
         }
-        wordScore *= wordMult;
         score += wordScore;
 
         if(bonus){
