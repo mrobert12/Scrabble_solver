@@ -238,10 +238,10 @@ public class Computer {
         if(temp.isFilled(anchorRow,anchorCol)) {
             score = Score(temp, playedSpaces, tilesPlayed == 7,
                     false, wordScore);
-            System.out.println(word);
+            /*System.out.println(word);
             System.out.println("WS: "+ wordScore);
             System.out.println(score);
-            temp.printBoard();
+            temp.printBoard();*/
             if (score >= highScore) {
                 highScore = score;
                 highBoard = temp;
