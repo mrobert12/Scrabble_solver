@@ -12,10 +12,9 @@ public class Main {
         readDictionary(dictionary,trie);
         //Board board = readBoard(values,player);
         Board board = boardFromFile(values,player);
+        System.out.println("Input Board:");
         board.printBoard();
         board.setAnchors();
-        //board.printAnchors();
-        //player.allWords("",trie.getRoot());
         player.solver(board);
     }
 
