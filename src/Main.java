@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -9,7 +11,18 @@ public class Main {
         int[] values = new int[26];
         setValues(values);
         readDictionary(dictionary,trie);
-        boardFromFile(values,trie);
+        File outfile = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\TestBoardsOutput");
+        FileWriter output = null;
+        try{
+            output = new FileWriter(outfile,false);
+            output.close();
+            output = new FileWriter(outfile,true);
+        }
+        catch(IOException e){
+            System.out.println("Filewriter error");
+            e.printStackTrace();
+        }
+        boardFromFile(values,trie,output);
     }
 
     public static void readDictionary(File dictionary,Trie trie){
@@ -49,7 +62,7 @@ public class Main {
         }
     }
 
-    public static void boardFromFile(int[] values,Trie trie) {
+    public static void boardFromFile(int[] values,Trie trie,FileWriter output) {
         File file = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\testBoard");
         Scanner input = null;
         try {
@@ -59,7 +72,7 @@ public class Main {
             System.exit(1);
         }
         while (input.hasNextLine()) {
-            Computer player = new Computer(trie,values);
+            Computer player = new Computer(trie,values,output);
             int boardSize = Integer.parseInt(input.nextLine());
             Board board = new Board(boardSize);
             for (int i = 0; i < boardSize; i++) {
@@ -105,11 +118,27 @@ public class Main {
                 }
                 player.addTile(tile);
             }
-            System.out.println("Input Board:");
-            board.printBoard();
-            board.setAnchors();
-            player.solver(board);
-            System.out.println();
+            try {
+                output.write("InputBoard:\n");
+                board.printBoard(output);
+                board.setAnchors();
+                player.solver(board);
+                output.write("\n");
+            }
+            catch(IOException e){
+                System.out.println("File error");
+                e.printStackTrace();
+            }
+
+
+        }
+        try {
+            output.flush();
+            output.close();
+        }
+        catch(IOException e){
+            System.out.println("File close error");
+            e.printStackTrace();
         }
     }
 }

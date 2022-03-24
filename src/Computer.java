@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -11,11 +13,13 @@ public class Computer {
     int highScore;
     Board highBoard;
     String highWord;
+    FileWriter output;
     public void addTile(Tile tile){
         hand.add(tile);
     }
 
-    public Computer(Trie trie,int[] values){
+    public Computer(Trie trie,int[] values,FileWriter output){
+        this.output = output;
         this.trie = trie;
         this.values = values;
     }
@@ -23,11 +27,18 @@ public class Computer {
     public void solver(Board board){
         this.board = board;
         handToCharArray();
-        System.out.print("Tray: ");
-        for (Character character : charHand) {
-            System.out.print(character);
+        try {
+            output.write("Tray: ");
+            for (Character character : charHand) {
+                output.write(character);
+            }
+            output.write("\n");
         }
-        System.out.println();
+        catch(IOException e){
+            System.out.println("File error");
+            e.printStackTrace();
+        }
+
         ArrayList<Space> anchors = board.getAnchors();
         if(anchors.size() == 0){
             anchors.add(board.getSpace(board.boardSize/2,board.boardSize/2));
@@ -77,13 +88,15 @@ public class Computer {
             }
         }
         if(highBoard != null) {
-            System.out.println("Solution " + highWord + " has " + highScore
-                    + " points");
-            System.out.println("Solution Board: ");
-            highBoard.printBoard();
-        }
-        else{
-            System.out.println("No solution found");
+            try{
+                output.write("Solution " + highWord + " has " + highScore
+                        + " points\n");
+                output.write("Solution Board: \n");
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+            highBoard.printBoard(output);
         }
     }
 
