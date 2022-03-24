@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\sowpods");
+        File dictionary = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\sowpods");
         int[] values = new int[26];
         setValues(values);
         readDictionary(dictionary,trie);
@@ -28,7 +28,7 @@ public class Main {
     }
 
     public static void setValues(int[] values){
-        File tileValues = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\Scrabble tiles");
+        File tileValues = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\Scrabble tiles");
         Scanner scan = null;
         try {
             scan = new Scanner(tileValues);
@@ -50,7 +50,7 @@ public class Main {
     }
 
     public static void boardFromFile(int[] values,Trie trie) {
-        File file = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\testBoard");
+        File file = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\testBoard");
         Scanner input = null;
         try {
             input = new Scanner(file);

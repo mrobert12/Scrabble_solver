@@ -29,6 +29,9 @@ public class Computer {
         }
         System.out.println();
         ArrayList<Space> anchors = board.getAnchors();
+        if(anchors.size() == 0){
+            anchors.add(board.getSpace(board.boardSize/2,board.boardSize/2));
+        }
         for(Space space : anchors){
             int row = space.getRow();
             int col = space.getCol();
