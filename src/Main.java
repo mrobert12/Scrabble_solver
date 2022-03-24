@@ -88,19 +88,23 @@ public class Main {
                     if (first == '.' && second == '.') {
                         space = new Space(1, 1, i, j, null);
                         board.addSpace(space, i, j);
-                    } else if (first == '.') {
+                    }
+                    else if (first == '.') {
                         space = new Space(second - '0', 1, i, j
                                 , null);
                         board.addSpace(space, i, j);
-                    } else if (first - '0' >= 0 && first - '0' <= 9) {
+                    }
+                    else if (first - '0' >= 0 && first - '0' <= 9) {
                         space = new Space(1, first - '0', i, j
                                 , null);
                         board.addSpace(space, i, j);
-                    } else if (first >= 'a' && first <= 'z') {
+                    }
+                    else if (first >= 'a' && first <= 'z') {
                         Tile tile = new Tile(first, values[first - 'a']);
                         space = new Space(1, 1, i, j, tile);
                         board.addSpace(space, i, j);
-                    } else if (first >= 'A' && first <= 'Z') {
+                    }
+                    else if (first >= 'A' && first <= 'Z') {
                         Tile tile = new Tile(first, 0);
                         space = new Space(1, 1, i, j, tile);
                         board.addSpace(space, i, j);
@@ -113,7 +117,8 @@ public class Main {
                 char letter = hand.charAt(x);
                 if (letter == '*') {
                     tile = new Tile(letter, 0);
-                } else {
+                }
+                else {
                     tile = new Tile(letter, values[letter - 'a']);
                 }
                 player.addTile(tile);
@@ -129,8 +134,6 @@ public class Main {
                 System.out.println("File error");
                 e.printStackTrace();
             }
-
-
         }
         try {
             output.flush();
