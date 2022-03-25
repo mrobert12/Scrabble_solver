@@ -7,12 +7,16 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\sowpods");
+        File dictionary = new File(args[0]);
         int[] values = new int[26];
         setValues(values);
         readDictionary(dictionary,trie);
-        File outfile = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\TestBoardsOutput");
+        Scanner stdin = new Scanner(System.in);
+        String fileIn = stdin.nextLine();
+        String fileOut = stdin.nextLine();
+        File outfile = new File(fileOut);
         FileWriter output = null;
+
         try{
             output = new FileWriter(outfile,false);
             output.close();
@@ -22,7 +26,7 @@ public class Main {
             System.out.println("Filewriter error");
             e.printStackTrace();
         }
-        boardFromFile(values,trie,output);
+        boardFromFile(values,trie,output,fileIn);
     }
 
     public static void readDictionary(File dictionary,Trie trie){
@@ -31,7 +35,7 @@ public class Main {
             fileRead = new Scanner(dictionary);
         }
         catch(FileNotFoundException e){
-            System.out.println("File Read Error");
+            System.out.println("File Read Error in: readDictionary");
             System.exit(1);
         }
         while(fileRead.hasNextLine()){
@@ -41,13 +45,13 @@ public class Main {
     }
 
     public static void setValues(int[] values){
-        File tileValues = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\Scrabble tiles");
+        File tileValues = new File("Resources\\ScrabbleTiles");
         Scanner scan = null;
         try {
             scan = new Scanner(tileValues);
         }
         catch(FileNotFoundException e){
-            System.out.println("File Read Error");
+            System.out.println("File Read Error in: setValues");
             System.exit(1);
         }
         while(scan.hasNextLine()) {
@@ -62,13 +66,14 @@ public class Main {
         }
     }
 
-    public static void boardFromFile(int[] values,Trie trie,FileWriter output) {
-        File file = new File("C:\\Users\\Micro\\Documents\\Spring2022\\CS351\\scrabble\\Resources\\testBoard");
+    public static void boardFromFile(int[] values,Trie trie,
+                                     FileWriter output,String fileIn) {
+        File file = new File(fileIn);
         Scanner input = null;
         try {
             input = new Scanner(file);
         } catch (FileNotFoundException e) {
-            System.out.println("File Read Error");
+            System.out.println("File Read Error in: boardFromFile");
             System.exit(1);
         }
         while (input.hasNextLine()) {
