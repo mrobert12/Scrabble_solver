@@ -1,7 +1,5 @@
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-/* test update please*/
+/* test asdfasdf*/
 public class Board{
     int boardSize;
     Space[][] spaces;
@@ -81,34 +79,27 @@ public class Board{
         space.setTile(tile);
     }
 
-    public void printBoard(FileWriter output) {
-
-        try{
-            for(int i = 0; i < boardSize;i++){
-                for(int j = 0; j< boardSize;j++){
-                    Space space = spaces[i][j];
-                    if(j > 0){
-                        output.write(" ");
-                    }
-                    if(space.getTile() != null){
-                        output.write(" " + space.getTile().getLetter());
-                    }
-                    else if(space.getTileMult() == 1 && space.getWordMult() == 1){
-                        output.write("..");
-                    }
-                    else if(space.getTileMult() != 1){
-                        output.write("." + space.getTileMult());
-                    }
-                    else if(space.getWordMult() != 1){
-                        output.write(space.getWordMult() + ".");
-                    }
+    public void printBoard(){
+        for(int i = 0; i < boardSize;i++){
+            for(int j = 0; j< boardSize;j++){
+                Space space = spaces[i][j];
+                if(j > 0){
+                    System.out.print(" ");
                 }
-                output.write("\n");
+                if(space.getTile() != null){
+                    System.out.print(" " + space.getTile().getLetter());
+                }
+                else if(space.getTileMult() == 1 && space.getWordMult() == 1){
+                    System.out.print("..");
+                }
+                else if(space.getTileMult() != 1){
+                    System.out.print("." + space.getTileMult());
+                }
+                else if(space.getWordMult() != 1){
+                    System.out.print(space.getWordMult() + ".");
+                }
             }
-        }
-        catch(IOException e){
-            System.out.println("File Write Error");
-            e.printStackTrace();
+            System.out.println();
         }
     }
 
