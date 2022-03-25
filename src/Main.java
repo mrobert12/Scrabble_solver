@@ -1,7 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -11,22 +9,7 @@ public class Main {
         int[] values = new int[26];
         setValues(values);
         readDictionary(dictionary,trie);
-        Scanner stdin = new Scanner(System.in);
-        String fileIn = stdin.nextLine();
-        String fileOut = stdin.nextLine();
-        File outfile = new File(fileOut);
-        FileWriter output = null;
-
-        try{
-            output = new FileWriter(outfile,false);
-            output.close();
-            output = new FileWriter(outfile,true);
-        }
-        catch(IOException e){
-            System.out.println("Filewriter error");
-            e.printStackTrace();
-        }
-        boardFromFile(values,trie,output,fileIn);
+        boardFromFile(values,trie);
     }
 
     public static void readDictionary(File dictionary,Trie trie){
@@ -35,7 +18,7 @@ public class Main {
             fileRead = new Scanner(dictionary);
         }
         catch(FileNotFoundException e){
-            System.out.println("File Read Error in: readDictionary");
+            System.out.println("File Read Error");
             System.exit(1);
         }
         while(fileRead.hasNextLine()){
@@ -45,13 +28,13 @@ public class Main {
     }
 
     public static void setValues(int[] values){
-        File tileValues = new File("Resources\\ScrabbleTiles");
+        File tileValues = new File("Resources\\Scrabble tiles");
         Scanner scan = null;
         try {
             scan = new Scanner(tileValues);
         }
         catch(FileNotFoundException e){
-            System.out.println("File Read Error in: setValues");
+            System.out.println("File Read Error");
             System.exit(1);
         }
         while(scan.hasNextLine()) {
@@ -66,18 +49,10 @@ public class Main {
         }
     }
 
-    public static void boardFromFile(int[] values,Trie trie,
-                                     FileWriter output,String fileIn) {
-        File file = new File(fileIn);
-        Scanner input = null;
-        try {
-            input = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            System.out.println("File Read Error in: boardFromFile");
-            System.exit(1);
-        }
+    public static void boardFromFile(int[] values,Trie trie) {
+        Scanner input = new Scanner(System.in);
         while (input.hasNextLine()) {
-            Computer player = new Computer(trie,values,output);
+            Computer player = new Computer(trie,values);
             int boardSize = Integer.parseInt(input.nextLine());
             Board board = new Board(boardSize);
             for (int i = 0; i < boardSize; i++) {
@@ -93,23 +68,19 @@ public class Main {
                     if (first == '.' && second == '.') {
                         space = new Space(1, 1, i, j, null);
                         board.addSpace(space, i, j);
-                    }
-                    else if (first == '.') {
+                    } else if (first == '.') {
                         space = new Space(second - '0', 1, i, j
                                 , null);
                         board.addSpace(space, i, j);
-                    }
-                    else if (first - '0' >= 0 && first - '0' <= 9) {
+                    } else if (first - '0' >= 0 && first - '0' <= 9) {
                         space = new Space(1, first - '0', i, j
                                 , null);
                         board.addSpace(space, i, j);
-                    }
-                    else if (first >= 'a' && first <= 'z') {
+                    } else if (first >= 'a' && first <= 'z') {
                         Tile tile = new Tile(first, values[first - 'a']);
                         space = new Space(1, 1, i, j, tile);
                         board.addSpace(space, i, j);
-                    }
-                    else if (first >= 'A' && first <= 'Z') {
+                    } else if (first >= 'A' && first <= 'Z') {
                         Tile tile = new Tile(first, 0);
                         space = new Space(1, 1, i, j, tile);
                         board.addSpace(space, i, j);
@@ -122,31 +93,16 @@ public class Main {
                 char letter = hand.charAt(x);
                 if (letter == '*') {
                     tile = new Tile(letter, 0);
-                }
-                else {
+                } else {
                     tile = new Tile(letter, values[letter - 'a']);
                 }
                 player.addTile(tile);
             }
-            try {
-                output.write("InputBoard:\n");
-                board.printBoard(output);
-                board.setAnchors();
-                player.solver(board);
-                output.write("\n");
-            }
-            catch(IOException e){
-                System.out.println("File error");
-                e.printStackTrace();
-            }
-        }
-        try {
-            output.flush();
-            output.close();
-        }
-        catch(IOException e){
-            System.out.println("File close error");
-            e.printStackTrace();
+            System.out.println("Input Board:");
+            board.printBoard();
+            board.setAnchors();
+            player.solver(board);
+            System.out.println();
         }
     }
 }
