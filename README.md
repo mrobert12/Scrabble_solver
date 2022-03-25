@@ -4,6 +4,10 @@ This project should have two versions a word solver and a Gui scrabble game.
 The solver finds the highest point move given a board and a set of tiles.<br/>
 The Gui version should be a full Scrabble game human verses computer player.
 
+The algorithms used for solving the board were adaped from the Paper shared in 
+class: https://www.cs.cmu.edu/afs/cs/academic/class/15451-s06/www/lectures/scrabble.pdf
+and from a youtube video:https://www.youtube.com/watch?v=9cytoYiF9uY which follwed the
+same paper but coding in python.
 # Usage
 The program takes a command line argument that is the dictionary of words to be
 read in to the trie. It reads in boards from the System.in and prints the 
