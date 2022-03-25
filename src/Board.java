@@ -1,5 +1,7 @@
 import java.util.ArrayList;
-/* test asdfasdf*/
+/* Michel Robert
+* Board class for holding the board state of the game when its created it is
+* given a size. all boards are square boards are held as 2d arrays of spaces.*/
 public class Board{
     int boardSize;
     Space[][] spaces;
@@ -7,6 +9,7 @@ public class Board{
     public Board(int boardSize){
         this.boardSize = boardSize;
         spaces = new Space[boardSize][boardSize];
+        //set every space to null
         for(int i = 0; i < boardSize;i++){
             for(int j = 0; j < boardSize;j++){
                 spaces[i][j] = null;
@@ -14,6 +17,9 @@ public class Board{
         }
     }
 
+    /* loop over the entire board looking for spaces with tiles on them. when
+    * a filled spaces is found we look up down left and right of the space if
+    * a position is empty then we add it to our array list of anchors */
     public void setAnchors(){
         for(int i = 0;i < boardSize;i++){
             for(int j = 0; j < boardSize;j++){
@@ -43,42 +49,39 @@ public class Board{
         }
     }
 
-    public void printAnchors(){
-        for (Space anchor : anchors) {
-            System.out.println(anchor.getRow() + " " + anchor.getCol());
-        }
-    }
-
+    /* checks if the position is inBounds and returns true if the space doesn't
+    * have a tile on it*/
     public Boolean emptySpace(int row, int col){
         return inBounds(row,col) && this.getSpace(row,col).getTile() == null;
     }
-
+    /* checks if the position is inBounds and returns true if the space does
+     * have a tile on it*/
     public Boolean isFilled(int row, int col){
         return inBounds(row,col) && this.getSpace(row,col).getTile() != null;
     }
 
+    //add a space to the board
     public void addSpace(Space space,int row,int col){
         spaces[row][col] = space;
     }
-
-    public void addAnchor(Space space){
-        anchors.add(space);
-    }
+    //method to get the arraylist of anchors
     public ArrayList<Space> getAnchors(){
         return anchors;
     }
+    //method for getting a space on the board
     public Space getSpace(int row,int col){
         return spaces[row][col];
     }
+    //method for getting the size of the board
     public int getSize(){
         return boardSize;
     }
-
+    //method for playing a tile on a space on the board.
     public void playTile(int row,int col,Tile tile){
         Space space = this.spaces[row][col];
         space.setTile(tile);
     }
-
+    //method that prints out the board at any given state
     public void printBoard(){
         for(int i = 0; i < boardSize;i++){
             for(int j = 0; j< boardSize;j++){
@@ -102,7 +105,7 @@ public class Board{
             System.out.println();
         }
     }
-
+    /* the next four methods are to make moving around the board more readable*/
     public int getLeft(int col){
         return col - 1;
     }
@@ -119,6 +122,8 @@ public class Board{
         return row + 1;
     }
 
+    /*method for copying the board array for creating temp boards to check added
+    words*/
     public void copyBoard(Space[][] sp){
         for(int i = 0;i< boardSize;i++){
             for(int j = 0;j< boardSize;j++){
@@ -130,11 +135,11 @@ public class Board{
             }
         }
     }
-
+    //method for testing if a location is within the bounds of the board
     public Boolean inBounds(int row, int col){
         return row>= 0 && row < boardSize && col >= 0 && col < boardSize;
     }
-
+    //method for getting the letter given a space location
     public Character getTileLetter(int row, int col){
         return getSpace(row,col).getTile().getLetter();
     }
