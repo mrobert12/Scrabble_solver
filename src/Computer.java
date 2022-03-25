@@ -79,7 +79,7 @@ public class Computer {
         if(highBoard != null) {
             System.out.println("Solution " + highWord + " has " + highScore
                     + " points");
-            System.out.println("Solution Board: ");
+            System.out.println("Solution Board:");
             highBoard.printBoard();
         }
         else{
