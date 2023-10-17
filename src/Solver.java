@@ -22,7 +22,7 @@ public class Solver {
             fileRead = new Scanner(dictionary);
         }
         catch(FileNotFoundException e){
-            System.out.println("File Read Error");
+            System.out.println("File Read Error Dictionary");
             System.exit(1);
         }
         while(fileRead.hasNextLine()){
@@ -33,13 +33,13 @@ public class Solver {
     /* setValues reads the tile settings file and sets the score values for
     * each letter*/
     public static void setValues(int[] values){
-        File tileValues = new File("Resources\\Scrabble tiles");
+        File tileValues = new File("Resources/ScrabbleTiles");
         Scanner scan = null;
         try {
             scan = new Scanner(tileValues);
         }
         catch(FileNotFoundException e){
-            System.out.println("File Read Error");
+            System.out.println("File Read Error Set Values");
             System.exit(1);
         }
         while(scan.hasNextLine()) {
