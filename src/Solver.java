@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Solver {
     public static void main(String[] args) {
         Trie trie = new Trie();
-        File dictionary = new File(args[0]);
+        File dictionary = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\twl06");
         int[] values = new int[26];
         setValues(values);
         readDictionary(dictionary,trie);
@@ -22,7 +22,7 @@ public class Solver {
             fileRead = new Scanner(dictionary);
         }
         catch(FileNotFoundException e){
-            System.out.println("File Read Error");
+            System.out.println("File Read Error 1");
             System.exit(1);
         }
         while(fileRead.hasNextLine()){
@@ -33,13 +33,13 @@ public class Solver {
     /* setValues reads the tile settings file and sets the score values for
     * each letter*/
     public static void setValues(int[] values){
-        File tileValues = new File("Resources\\Scrabble tiles");
+        File tileValues = new File("D:\\Documents\\UNM\\Spring2022\\CS351\\scrabble\\Resources\\ScrabbleTiles");
         Scanner scan = null;
         try {
             scan = new Scanner(tileValues);
         }
         catch(FileNotFoundException e){
-            System.out.println("File Read Error");
+            System.out.println("File Read Error 2");
             System.exit(1);
         }
         while(scan.hasNextLine()) {
@@ -119,5 +119,6 @@ public class Solver {
             player.solver(board);
             System.out.println();
         }
+        input.close();
     }
 }
